@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebOS - Advanced Web Operating System</title>
+    <title>WebOS - نظام التشغيل على الويب</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* جميع أنماط CSS السابقة هنا */
         * {
             margin: 0;
             padding: 0;
@@ -15,25 +14,28 @@
         }
 
         :root {
-            --primary-color: #0078d7;
-            --secondary-color: #106ebe;
-            --accent-color: #4CAF50;
-            --dark-color: #1e1e1e;
-            --light-color: #f3f3f3;
-            --taskbar-height: 45px;
-            --startmenu-width: 500px;
-            --startmenu-height: 600px;
+            --primary: #0078d7;
+            --primary-dark: #106ebe;
+            --accent: #4CAF50;
+            --dark: #1e1e1e;
+            --light: #f3f3f3;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --success: #2ecc71;
+            --taskbar-h: 45px;
+            --startmenu-w: 500px;
+            --startmenu-h: 600px;
         }
 
         body {
             overflow: hidden;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             height: 100vh;
             user-select: none;
         }
 
-        /* شاشة تسجيل الدخول */
-        .login-screen {
+        /* شاشة الإعداد الأولي */
+        .setup-screen {
             position: fixed;
             top: 0;
             left: 0;
@@ -44,6 +46,99 @@
             justify-content: center;
             align-items: center;
             z-index: 10000;
+            color: white;
+        }
+
+        .setup-container {
+            width: 90%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1s;
+        }
+
+        .setup-step {
+            display: none;
+        }
+
+        .setup-step.active {
+            display: block;
+        }
+
+        .setup-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .setup-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 16px;
+        }
+
+        .form-group input, .form-group select {
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .setup-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* شاشة تسجيل الدخول */
+        .login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a3c6e 0%, #0d2b52 100%);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9000;
             color: white;
         }
 
@@ -83,27 +178,12 @@
             font-size: 16px;
         }
 
-        .password-input button {
-            padding: 12px;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background 0.3s;
-        }
-
-        .password-input button:hover {
-            background: var(--secondary-color);
-        }
-
         /* سطح المكتب */
         .desktop {
             display: none;
             width: 100%;
             height: 100vh;
-            background: url('https://images.unsplash.com/photo-1505506874110-6a7a69069a08?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            background: url('https://images.unsplash.com/photo-1505506874110-6a7a69069a08?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
             position: relative;
         }
 
@@ -113,7 +193,7 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            height: var(--taskbar-height);
+            height: var(--taskbar-h);
             background: rgba(30, 30, 30, 0.9);
             display: flex;
             align-items: center;
@@ -136,11 +216,6 @@
             background: rgba(255, 255, 255, 0.1);
         }
 
-        .start-menu-btn img {
-            width: 25px;
-            height: 25px;
-        }
-
         .taskbar-apps {
             flex: 1;
             display: flex;
@@ -160,6 +235,9 @@
             text-overflow: ellipsis;
             white-space: nowrap;
             transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .taskbar-app:hover {
@@ -192,10 +270,10 @@
         /* قائمة ابدأ */
         .start-menu {
             position: fixed;
-            bottom: var(--taskbar-height);
+            bottom: var(--taskbar-h);
             left: 0;
-            width: var(--startmenu-width);
-            height: var(--startmenu-height);
+            width: var(--startmenu-w);
+            height: var(--startmenu-h);
             background: rgba(255, 255, 255, 0.95);
             border-radius: 10px 10px 0 0;
             display: none;
@@ -243,10 +321,10 @@
             background: rgba(0, 120, 215, 0.1);
         }
 
-        .app-item img {
-            width: 40px;
-            height: 40px;
+        .app-item i {
+            font-size: 32px;
             margin-bottom: 8px;
+            color: var(--primary);
         }
 
         .app-item span {
@@ -293,7 +371,7 @@
 
         .power-options button {
             padding: 12px;
-            background: var(--primary-color);
+            background: var(--primary);
             color: white;
             border: none;
             border-radius: 5px;
@@ -307,7 +385,7 @@
         }
 
         .power-options button:hover {
-            background: var(--secondary-color);
+            background: var(--primary-dark);
         }
 
         /* أيقونات سطح المكتب */
@@ -342,9 +420,8 @@
             background: rgba(255, 255, 255, 0.2);
         }
 
-        .desktop-icon img {
-            width: 48px;
-            height: 48px;
+        .desktop-icon i {
+            font-size: 48px;
             margin-bottom: 8px;
             filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.5));
         }
@@ -359,7 +436,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: calc(100% - var(--taskbar-height));
+            height: calc(100% - var(--taskbar-h));
             pointer-events: none;
         }
 
@@ -379,7 +456,7 @@
 
         .window.maximized {
             width: 100% !important;
-            height: calc(100% - var(--taskbar-height)) !important;
+            height: calc(100% - var(--taskbar-h)) !important;
             top: 0 !important;
             left: 0 !important;
             border-radius: 0;
@@ -387,7 +464,7 @@
 
         .window-header {
             height: 35px;
-            background: var(--primary-color);
+            background: var(--primary);
             color: white;
             display: flex;
             justify-content: space-between;
@@ -402,11 +479,6 @@
             align-items: center;
             gap: 8px;
             font-size: 14px;
-        }
-
-        .window-title img {
-            width: 16px;
-            height: 16px;
         }
 
         .window-controls {
@@ -433,7 +505,7 @@
         .window-content {
             flex: 1;
             overflow: auto;
-            background: var(--light-color);
+            background: var(--light);
         }
 
         /* تطبيقات محددة */
@@ -525,9 +597,8 @@
             background: rgba(0, 0, 0, 0.05);
         }
 
-        .file-item img {
-            width: 48px;
-            height: 48px;
+        .file-item i {
+            font-size: 32px;
             margin-bottom: 8px;
         }
 
@@ -590,13 +661,13 @@
         }
 
         .calculator .equals {
-            background: var(--primary-color);
+            background: var(--primary);
             color: white;
         }
 
         .browser-content {
             width: 100%;
-            height: 100%;
+            height: calc(100% - 50px);
             border: none;
         }
 
@@ -606,6 +677,7 @@
             background: #f3f3f3;
             border-bottom: 1px solid #ddd;
             gap: 10px;
+            height: 50px;
         }
 
         .browser-toolbar input {
@@ -618,7 +690,7 @@
 
         .browser-toolbar button {
             padding: 8px 15px;
-            background: var(--primary-color);
+            background: var(--primary);
             color: white;
             border: none;
             border-radius: 20px;
@@ -627,7 +699,7 @@
         }
 
         .browser-toolbar button:hover {
-            background: var(--secondary-color);
+            background: var(--primary-dark);
         }
 
         .media-player {
@@ -650,7 +722,7 @@
 
         .media-controls button {
             padding: 10px 15px;
-            background: var(--primary-color);
+            background: var(--primary);
             color: white;
             border: none;
             border-radius: 5px;
@@ -659,7 +731,7 @@
         }
 
         .media-controls button:hover {
-            background: var(--secondary-color);
+            background: var(--primary-dark);
         }
 
         .settings-panel {
@@ -694,6 +766,67 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 14px;
+        }
+
+        .user-manager {
+            padding: 20px;
+        }
+
+        .user-list {
+            margin-top: 20px;
+        }
+
+        .user-card {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: white;
+        }
+
+        .user-card img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .user-info-full {
+            flex: 1;
+        }
+
+        .user-info-full h4 {
+            margin-bottom: 5px;
+        }
+
+        .user-info-full p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .user-actions button {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .btn-edit {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-delete {
+            background: var(--danger);
+            color: white;
         }
 
         /* الرسوم المتحركة */
@@ -732,16 +865,88 @@
     </style>
 </head>
 <body>
+    <!-- شاشة الإعداد الأولي -->
+    <div id="setupScreen" class="setup-screen">
+        <div class="setup-container">
+            <div id="setupStep1" class="setup-step active">
+                <h2 class="setup-title">مرحباً بك في WebOS</h2>
+                <p style="text-align: center; margin-bottom: 20px;">سيقوم هذا الإعداد بإعداد نظام التشغيل WebOS على جهازك</p>
+                <div class="setup-buttons">
+                    <button class="btn btn-secondary" onclick="cancelSetup()">إلغاء</button>
+                    <button class="btn" onclick="nextSetupStep()">التالي</button>
+                </div>
+            </div>
+            
+            <div id="setupStep2" class="setup-step">
+                <h2 class="setup-title">إنشاء المستخدم الرئيسي</h2>
+                <div class="setup-form">
+                    <div class="form-group">
+                        <label for="adminUsername">اسم المستخدم:</label>
+                        <input type="text" id="adminUsername" placeholder="أدخل اسم المستخدم">
+                    </div>
+                    <div class="form-group">
+                        <label for="adminPassword">كلمة المرور:</label>
+                        <input type="password" id="adminPassword" placeholder="أدخل كلمة المرور">
+                    </div>
+                    <div class="form-group">
+                        <label for="adminEmail">البريد الإلكتروني:</label>
+                        <input type="email" id="adminEmail" placeholder="أدخل بريدك الإلكتروني">
+                    </div>
+                </div>
+                <div class="setup-buttons">
+                    <button class="btn btn-secondary" onclick="prevSetupStep()">السابق</button>
+                    <button class="btn" onclick="nextSetupStep()">التالي</button>
+                </div>
+            </div>
+            
+            <div id="setupStep3" class="setup-step">
+                <h2 class="setup-title">إعدادات النظام</h2>
+                <div class="setup-form">
+                    <div class="form-group">
+                        <label for="systemLanguage">لغة النظام:</label>
+                        <select id="systemLanguage">
+                            <option value="ar">العربية</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="systemTheme">سمة النظام:</label>
+                        <select id="systemTheme">
+                            <option value="light">فاتح</option>
+                            <option value="dark">داكن</option>
+                            <option value="auto">تلقائي</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="wallpaper">خلفية سطح المكتب:</label>
+                        <select id="wallpaper">
+                            <option value="default">الافتراضية</option>
+                            <option value="nature">الطبيعة</option>
+                            <option value="abstract">مجردة</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="setup-buttons">
+                    <button class="btn btn-secondary" onclick="prevSetupStep()">السابق</button>
+                    <button class="btn" onclick="completeSetup()">إنهاء الإعداد</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- شاشة تسجيل الدخول -->
     <div id="loginScreen" class="login-screen">
         <div class="login-container">
             <div class="user-profile">
-                <img src="https://i.pravatar.cc/150?img=12" alt="User">
-                <h2>Ahmed Mohamed</h2>
+                <img id="loginUserImage" src="https://i.pravatar.cc/150?img=12" alt="User">
+                <h2 id="loginUsername">مستخدم</h2>
             </div>
             <div class="password-input">
-                <input type="password" placeholder="Enter password" id="passwordInput">
-                <button id="loginBtn">Sign In <i class="fas fa-arrow-right"></i></button>
+                <input type="password" placeholder="أدخل كلمة المرور" id="passwordInput">
+                <button class="btn" id="loginBtn">تسجيل الدخول <i class="fas fa-arrow-right"></i></button>
+            </div>
+            <div style="margin-top: 20px;">
+                <button class="btn btn-secondary" onclick="showUserManager()">إدارة المستخدمين</button>
             </div>
         </div>
     </div>
@@ -766,6 +971,9 @@
                 </div>
                 <div id="clock">12:00 PM</div>
                 <div id="date">Jan 1, 2023</div>
+                <div class="system-icon" id="userMenuBtn">
+                    <i class="fas fa-user"></i>
+                </div>
             </div>
         </div>
 
@@ -773,76 +981,76 @@
         <div id="startMenu" class="start-menu">
             <div class="start-menu-left">
                 <div class="pinned-apps">
-                    <div class="section-title">Pinned</div>
+                    <div class="section-title">التطبيقات المثبتة</div>
                     <div class="app-grid">
                         <div class="app-item" data-app="fileExplorer">
-                            <i class="fas fa-folder fa-2x" style="color: #0078d7;"></i>
-                            <span>File Explorer</span>
+                            <i class="fas fa-folder"></i>
+                            <span>مستكشف الملفات</span>
                         </div>
                         <div class="app-item" data-app="notepad">
-                            <i class="fas fa-file-alt fa-2x" style="color: #0078d7;"></i>
-                            <span>Notepad</span>
+                            <i class="fas fa-file-alt"></i>
+                            <span>المفكرة</span>
                         </div>
                         <div class="app-item" data-app="calculator">
-                            <i class="fas fa-calculator fa-2x" style="color: #0078d7;"></i>
-                            <span>Calculator</span>
+                            <i class="fas fa-calculator"></i>
+                            <span>الآلة الحاسبة</span>
                         </div>
                         <div class="app-item" data-app="browser">
-                            <i class="fas fa-globe fa-2x" style="color: #0078d7;"></i>
-                            <span>Web Browser</span>
+                            <i class="fas fa-globe"></i>
+                            <span>متصفح الويب</span>
                         </div>
                         <div class="app-item" data-app="mediaPlayer">
-                            <i class="fas fa-play-circle fa-2x" style="color: #0078d7;"></i>
-                            <span>Media Player</span>
+                            <i class="fas fa-play-circle"></i>
+                            <span>مشغل الوسائط</span>
                         </div>
                         <div class="app-item" data-app="settings">
-                            <i class="fas fa-cog fa-2x" style="color: #0078d7;"></i>
-                            <span>Settings</span>
+                            <i class="fas fa-cog"></i>
+                            <span>الإعدادات</span>
                         </div>
                     </div>
                 </div>
                 <div class="all-apps">
-                    <div class="section-title">All apps</div>
+                    <div class="section-title">جميع التطبيقات</div>
                     <div class="app-grid">
-                        <div class="app-item" data-app="paint">
-                            <i class="fas fa-palette fa-2x" style="color: #0078d7;"></i>
-                            <span>Paint</span>
+                        <div class="app-item" data-app="userManager">
+                            <i class="fas fa-users"></i>
+                            <span>إدارة المستخدمين</span>
                         </div>
                         <div class="app-item" data-app="terminal">
-                            <i class="fas fa-terminal fa-2x" style="color: #0078d7;"></i>
-                            <span>Terminal</span>
+                            <i class="fas fa-terminal"></i>
+                            <span>الطرفية</span>
                         </div>
                         <div class="app-item" data-app="calendar">
-                            <i class="fas fa-calendar-alt fa-2x" style="color: #0078d7;"></i>
-                            <span>Calendar</span>
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>التقويم</span>
                         </div>
                         <div class="app-item" data-app="camera">
-                            <i class="fas fa-camera fa-2x" style="color: #0078d7;"></i>
-                            <span>Camera</span>
+                            <i class="fas fa-camera"></i>
+                            <span>الكاميرا</span>
                         </div>
                         <div class="app-item" data-app="mail">
-                            <i class="fas fa-envelope fa-2x" style="color: #0078d7;"></i>
-                            <span>Mail</span>
+                            <i class="fas fa-envelope"></i>
+                            <span>البريد</span>
                         </div>
                         <div class="app-item" data-app="store">
-                            <i class="fas fa-shopping-bag fa-2x" style="color: #0078d7;"></i>
-                            <span>Store</span>
+                            <i class="fas fa-shopping-bag"></i>
+                            <span>المتجر</span>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="start-menu-right">
                 <div class="user-info">
-                    <img src="https://i.pravatar.cc/150?img=12" alt="User">
+                    <img id="currentUserImage" src="https://i.pravatar.cc/150?img=12" alt="User">
                     <div class="user-details">
-                        <h3>Ahmed Mohamed</h3>
-                        <p>Administrator</p>
+                        <h3 id="currentUsername">مستخدم</h3>
+                        <p id="currentUserRole">مسؤول</p>
                     </div>
                 </div>
                 <div class="power-options">
-                    <button id="shutdownBtn"><i class="fas fa-power-off"></i> Shutdown</button>
-                    <button id="restartBtn"><i class="fas fa-redo"></i> Restart</button>
-                    <button id="sleepBtn"><i class="fas fa-moon"></i> Sleep</button>
+                    <button id="lockBtn"><i class="fas fa-lock"></i> قفل الشاشة</button>
+                    <button id="logoutBtn"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
+                    <button id="shutdownBtn"><i class="fas fa-power-off"></i> إيقاف التشغيل</button>
                 </div>
             </div>
         </div>
@@ -853,586 +1061,927 @@
         <!-- أيقونات سطح المكتب -->
         <div class="desktop-icons">
             <div class="desktop-icon" data-app="fileExplorer">
-                <i class="fas fa-folder fa-3x" style="color: white;"></i>
-                <span>File Explorer</span>
+                <i class="fas fa-folder"></i>
+                <span>المستندات</span>
             </div>
             <div class="desktop-icon" data-app="notepad">
-                <i class="fas fa-file-alt fa-3x" style="color: white;"></i>
-                <span>Notepad</span>
+                <i class="fas fa-file-alt"></i>
+                <span>المفكرة</span>
             </div>
             <div class="desktop-icon" data-app="browser">
-                <i class="fas fa-globe fa-3x" style="color: white;"></i>
-                <span>Web Browser</span>
+                <i class="fas fa-globe"></i>
+                <span>المتصفح</span>
             </div>
             <div class="desktop-icon" data-app="recycleBin">
-                <i class="fas fa-trash-alt fa-3x" style="color: white;"></i>
-                <span>Recycle Bin</span>
+                <i class="fas fa-trash-alt"></i>
+                <span>سلة المحذوفات</span>
             </div>
         </div>
     </div>
 
     <script>
-        // المتغيرات العامة
-        let windows = [];
-        let zIndexCounter = 1000;
-        let activeWindow = null;
-        let calculatorValue = '0';
-        let previousValue = '0';
-        let operation = null;
-
-        // تهيئة النظام
-        document.addEventListener('DOMContentLoaded', function() {
-            // تحديث الوقت والتاريخ
-            updateDateTime();
-            setInterval(updateDateTime, 1000);
+        // قاعدة بيانات افتراضية
+        const WebOSDB = {
+            users: [],
+            files: [],
+            settings: {},
+            sessions: [],
             
-            // إعداد أحداث المستخدم
-            setupEventListeners();
-        });
+            init: function() {
+                // تحقق إذا كان هناك بيانات محفوظة مسبقاً
+                const savedData = localStorage.getItem('webos_data');
+                if (savedData) {
+                    const data = JSON.parse(savedData);
+                    this.users = data.users || [];
+                    this.files = data.files || [];
+                    this.settings = data.settings || {};
+                    this.sessions = data.sessions || [];
+                } else {
+                    // بيانات افتراضية
+                    this.settings = {
+                        language: 'ar',
+                        theme: 'light',
+                        wallpaper: 'default'
+                    };
+                    this.save();
+                }
+            },
+            
+            save: function() {
+                const data = {
+                    users: this.users,
+                    files: this.files,
+                    settings: this.settings,
+                    sessions: this.sessions
+                };
+                localStorage.setItem('webos_data', JSON.stringify(data));
+            },
+            
+            addUser: function(user) {
+                user.id = this.users.length + 1;
+                user.createdAt = new Date().toISOString();
+                this.users.push(user);
+                this.save();
+                return user.id;
+            },
+            
+            getUser: function(username) {
+                return this.users.find(u => u.username === username);
+            },
+            
+            updateUser: function(id, updates) {
+                const userIndex = this.users.findIndex(u => u.id === id);
+                if (userIndex !== -1) {
+                    this.users[userIndex] = {...this.users[userIndex], ...updates};
+                    this.save();
+                    return true;
+                }
+                return false;
+            },
+            
+            deleteUser: function(id) {
+                const userIndex = this.users.findIndex(u => u.id === id);
+                if (userIndex !== -1) {
+                    this.users.splice(userIndex, 1);
+                    this.save();
+                    return true;
+                }
+                return false;
+            },
+            
+            addFile: function(file) {
+                file.id = this.files.length + 1;
+                file.createdAt = new Date().toISOString();
+                file.modifiedAt = new Date().toISOString();
+                this.files.push(file);
+                this.save();
+                return file.id;
+            },
+            
+            getFiles: function(userId) {
+                return this.files.filter(f => f.userId === userId);
+            },
+            
+            updateFile: function(id, updates) {
+                const fileIndex = this.files.findIndex(f => f.id === id);
+                if (fileIndex !== -1) {
+                    this.files[fileIndex] = {...this.files[fileIndex], ...updates, modifiedAt: new Date().toISOString()};
+                    this.save();
+                    return true;
+                }
+                return false;
+            },
+            
+            deleteFile: function(id) {
+                const fileIndex = this.files.findIndex(f => f.id === id);
+                if (fileIndex !== -1) {
+                    this.files.splice(fileIndex, 1);
+                    this.save();
+                    return true;
+                }
+                return false;
+            },
+            
+            updateSettings: function(newSettings) {
+                this.settings = {...this.settings, ...newSettings};
+                this.save();
+            }
+        };
 
-        // تحديث الوقت والتاريخ
-        function updateDateTime() {
-            const now = new Date();
-            document.getElementById('clock').textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            document.getElementById('date').textContent = now.toLocaleDateString();
-        }
-
-        // إعداد المستمعين للأحداث
-        function setupEventListeners() {
-            // تسجيل الدخول
-            document.getElementById('loginBtn').addEventListener('click', function() {
+        // نظام التشغيل
+        const WebOS = {
+            currentUser: null,
+            windows: [],
+            zIndexCounter: 1000,
+            activeWindow: null,
+            calculatorValue: '0',
+            
+            init: function() {
+                WebOSDB.init();
+                
+                // التحقق إذا كان النظام مهيأ
+                if (WebOSDB.users.length === 0) {
+                    this.showSetupScreen();
+                } else {
+                    this.showLoginScreen();
+                }
+                
+                // إعداد المستمعين للأحداث
+                this.setupEventListeners();
+                
+                // تحديث الوقت والتاريخ
+                this.updateDateTime();
+                setInterval(() => this.updateDateTime(), 1000);
+            },
+            
+            showSetupScreen: function() {
+                document.getElementById('setupScreen').style.display = 'flex';
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('desktop').style.display = 'none';
+            },
+            
+            showLoginScreen: function() {
+                document.getElementById('setupScreen').style.display = 'none';
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('desktop').style.display = 'none';
+                
+                // عرض أول مستخدم كافتراضي
+                if (WebOSDB.users.length > 0) {
+                    const user = WebOSDB.users[0];
+                    document.getElementById('loginUsername').textContent = user.username;
+                    document.getElementById('loginUserImage').src = user.avatar || 'https://i.pravatar.cc/150?img=12';
+                }
+            },
+            
+            showDesktop: function() {
+                document.getElementById('setupScreen').style.display = 'none';
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('desktop').style.display = 'block';
-            });
-            
-            // السماح بتسجيل الدخول بالضغط على Enter
-            document.getElementById('passwordInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    document.getElementById('loginScreen').style.display = 'none';
-                    document.getElementById('desktop').style.display = 'block';
+                
+                // تحديث معلومات المستخدم الحالي
+                if (this.currentUser) {
+                    document.getElementById('currentUsername').textContent = this.currentUser.username;
+                    document.getElementById('currentUserRole').textContent = this.currentUser.role === 'admin' ? 'مسؤول' : 'مستخدم';
+                    document.getElementById('currentUserImage').src = this.currentUser.avatar || 'https://i.pravatar.cc/150?img=12';
                 }
-            });
+            },
             
-            // قائمة ابدأ
-            document.getElementById('startMenuBtn').addEventListener('click', function() {
-                const startMenu = document.getElementById('startMenu');
-                startMenu.style.display = startMenu.style.display === 'grid' ? 'none' : 'grid';
-            });
-            
-            // إغلاق قائمة ابدأ عند النقر خارجها
-            document.addEventListener('click', function(e) {
-                if (!e.target.closest('#startMenu') && !e.target.closest('#startMenuBtn')) {
-                    document.getElementById('startMenu').style.display = 'none';
-                }
-            });
-            
-            // فتح التطبيقات من قائمة ابدأ
-            document.querySelectorAll('.app-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    const appName = this.getAttribute('data-app');
-                    openApp(appName);
-                    document.getElementById('startMenu').style.display = 'none';
-                });
-            });
-            
-            // فتح التطبيقات من أيقونات سطح المكتب
-            document.querySelectorAll('.desktop-icon').forEach(icon => {
-                icon.addEventListener('dblclick', function() {
-                    const appName = this.getAttribute('data-app');
-                    openApp(appName);
+            setupEventListeners: function() {
+                // تسجيل الدخول
+                document.getElementById('loginBtn').addEventListener('click', () => this.login());
+                document.getElementById('passwordInput').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.login();
                 });
                 
-                // تحديد أيقونة سطح المكتب
-                icon.addEventListener('click', function() {
-                    document.querySelectorAll('.desktop-icon').forEach(i => {
-                        i.classList.remove('selected');
+                // قائمة ابدأ
+                document.getElementById('startMenuBtn').addEventListener('click', () => {
+                    const startMenu = document.getElementById('startMenu');
+                    startMenu.style.display = startMenu.style.display === 'grid' ? 'none' : 'grid';
+                });
+                
+                // إغلاق قائمة ابدأ عند النقر خارجها
+                document.addEventListener('click', (e) => {
+                    if (!e.target.closest('#startMenu') && !e.target.closest('#startMenuBtn')) {
+                        document.getElementById('startMenu').style.display = 'none';
+                    }
+                });
+                
+                // فتح التطبيقات من قائمة ابدأ
+                document.querySelectorAll('.app-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const appName = item.getAttribute('data-app');
+                        this.openApp(appName);
+                        document.getElementById('startMenu').style.display = 'none';
                     });
-                    this.classList.add('selected');
                 });
-            });
+                
+                // فتح التطبيقات من أيقونات سطح المكتب
+                document.querySelectorAll('.desktop-icon').forEach(icon => {
+                    icon.addEventListener('dblclick', () => {
+                        const appName = icon.getAttribute('data-app');
+                        this.openApp(appName);
+                    });
+                });
+                
+                // إدارة الطاقة
+                document.getElementById('lockBtn').addEventListener('click', () => this.lockScreen());
+                document.getElementById('logoutBtn').addEventListener('click', () => this.logout());
+                document.getElementById('shutdownBtn').addEventListener('click', () => this.shutdown());
+            },
             
-            // إيقاف التشغيل وإعادة التشغيل والنوم
-            document.getElementById('shutdownBtn').addEventListener('click', function() {
-                if (confirm('Are you sure you want to shutdown?')) {
-                    document.getElementById('desktop').style.display = 'none';
-                    document.getElementById('loginScreen').style.display = 'flex';
-                }
-            });
-            
-            document.getElementById('restartBtn').addEventListener('click', function() {
-                if (confirm('Are you sure you want to restart?')) {
-                    location.reload();
-                }
-            });
-            
-            document.getElementById('sleepBtn').addEventListener('click', function() {
-                alert('System is going to sleep...');
-                document.getElementById('startMenu').style.display = 'none';
-            });
-        }
-
-        // فتح تطبيق جديد
-        function openApp(appName) {
-            const windowId = 'window_' + Date.now();
-            const windowElement = document.createElement('div');
-            windowElement.className = 'window';
-            windowElement.id = windowId;
-            windowElement.style.zIndex = zIndexCounter++;
-            windowElement.style.left = '100px';
-            windowElement.style.top = '100px';
-            
-            // إعداد محتوى التطبيق
-            let windowTitle = '';
-            let windowContent = '';
-            
-            switch(appName) {
-                case 'fileExplorer':
-                    windowTitle = 'File Explorer';
-                    windowContent = `
-                        <div class="file-explorer">
-                            <div class="sidebar">
-                                <h3>Quick Access</h3>
-                                <ul>
-                                    <li><i class="fas fa-desktop"></i> Desktop</li>
-                                    <li><i class="fas fa-download"></i> Downloads</li>
-                                    <li><i class="fas fa-file"></i> Documents</li>
-                                    <li><i class="fas fa-image"></i> Pictures</li>
-                                    <li><i class="fas fa-music"></i> Music</li>
-                                    <li><i class="fas fa-film"></i> Videos</li>
-                                </ul>
-                                <h3>This PC</h3>
-                                <ul>
-                                    <li><i class="fas fa-hdd"></i> Local Disk (C:)</li>
-                                    <li><i class="fas fa-hdd"></i> Local Disk (D:)</li>
-                                    <li><i class="fas fa-compact-disc"></i> DVD Drive (E:)</li>
-                                </ul>
-                            </div>
-                            <div class="content-area">
-                                <div class="toolbar">
-                                    <button><i class="fas fa-arrow-left"></i> Back</button>
-                                    <button><i class="fas fa-arrow-right"></i> Forward</button>
-                                    <button><i class="fas fa-arrow-up"></i> Up</button>
-                                    <button><i class="fas fa-sync-alt"></i> Refresh</button>
-                                </div>
-                                <div class="files-grid">
-                                    <div class="file-item">
-                                        <i class="fas fa-folder fa-3x" style="color: #0078d7;"></i>
-                                        <span>Documents</span>
-                                    </div>
-                                    <div class="file-item">
-                                        <i class="fas fa-folder fa-3x" style="color: #0078d7;"></i>
-                                        <span>Pictures</span>
-                                    </div>
-                                    <div class="file-item">
-                                        <i class="fas fa-folder fa-3x" style="color: #0078d7;"></i>
-                                        <span>Music</span>
-                                    </div>
-                                    <div class="file-item">
-                                        <i class="fas fa-folder fa-3x" style="color: #0078d7;"></i>
-                                        <span>Videos</span>
-                                    </div>
-                                    <div class="file-item">
-                                        <i class="fas fa-file-pdf fa-3x" style="color: #e74c3c;"></i>
-                                        <span>Document.pdf</span>
-                                    </div>
-                                    <div class="file-item">
-                                        <i class="fas fa-file-image fa-3x" style="color: #2ecc71;"></i>
-                                        <span>Photo.jpg</span>
-                                    </div>
-                                    <div class="file-item">
-                                        <i class="fas fa-file-video fa-3x" style="color: #9b59b6;"></i>
-                                        <span>Movie.mp4</span>
-                                    </div>
-                                    <div class="file-item">
-                                        <i class="fas fa-file-alt fa-3x" style="color: #f39c12;"></i>
-                                        <span>Notes.txt</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    break;
+            login: function() {
+                const username = document.getElementById('loginUsername').textContent;
+                const password = document.getElementById('passwordInput').value;
+                
+                const user = WebOSDB.getUser(username);
+                if (user && user.password === password) {
+                    this.currentUser = user;
+                    this.showDesktop();
+                    document.getElementById('passwordInput').value = '';
                     
-                case 'notepad':
-                    windowTitle = 'Notepad';
-                    windowContent = `
-                        <textarea class="notepad-content" placeholder="Start typing...">Welcome to WebOS Notepad!
-You can use this application to write and edit text files.
-
-Features:
-- Simple text editing
-- Auto-save functionality
-- Basic formatting
-
-Try it out!</textarea>
-                    `;
-                    break;
-                    
-                case 'calculator':
-                    windowTitle = 'Calculator';
-                    windowContent = `
-                        <div class="calculator">
-                            <div class="calculator-display" id="calcDisplay">0</div>
-                            <button onclick="clearCalculator()">C</button>
-                            <button onclick="appendToCalculator('±')">±</button>
-                            <button onclick="appendToCalculator('%')">%</button>
-                            <button onclick="appendToCalculator('/')" class="operator">/</button>
-                            <button onclick="appendToCalculator('7')">7</button>
-                            <button onclick="appendToCalculator('8')">8</button>
-                            <button onclick="appendToCalculator('9')">9</button>
-                            <button onclick="appendToCalculator('*')" class="operator">×</button>
-                            <button onclick="appendToCalculator('4')">4</button>
-                            <button onclick="appendToCalculator('5')">5</button>
-                            <button onclick="appendToCalculator('6')">6</button>
-                            <button onclick="appendToCalculator('-')" class="operator">-</button>
-                            <button onclick="appendToCalculator('1')">1</button>
-                            <button onclick="appendToCalculator('2')">2</button>
-                            <button onclick="appendToCalculator('3')">3</button>
-                            <button onclick="appendToCalculator('+')" class="operator">+</button>
-                            <button onclick="appendToCalculator('0')" style="grid-column: span 2;">0</button>
-                            <button onclick="appendToCalculator('.')">.</button>
-                            <button onclick="calculateResult()" class="equals">=</button>
-                        </div>
-                    `;
-                    break;
-                    
-                case 'browser':
-                    windowTitle = 'Web Browser';
-                    windowContent = `
-                        <div class="browser-toolbar">
-                            <button><i class="fas fa-arrow-left"></i></button>
-                            <button><i class="fas fa-arrow-right"></i></button>
-                            <button><i class="fas fa-redo"></i></button>
-                            <input type="text" placeholder="Search or enter website name" value="https://www.example.com">
-                            <button><i class="fas fa-search"></i></button>
-                        </div>
-                        <iframe class="browser-content" src="https://www.example.com"></iframe>
-                    `;
-                    break;
-                    
-                case 'mediaPlayer':
-                    windowTitle = 'Media Player';
-                    windowContent = `
-                        <div class="media-player">
-                            <video controls>
-                                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                            <div class="media-controls">
-                                <button><i class="fas fa-play"></i> Play</button>
-                                <button><i class="fas fa-pause"></i> Pause</button>
-                                <button><i class="fas fa-stop"></i> Stop</button>
-                                <button><i class="fas fa-volume-up"></i> Volume</button>
-                            </div>
-                        </div>
-                    `;
-                    break;
-                    
-                case 'settings':
-                    windowTitle = 'Settings';
-                    windowContent = `
-                        <div class="settings-panel">
-                            <div class="settings-section">
-                                <h3>System</h3>
-                                <div class="setting-item">
-                                    <label for="themeSelect">Theme:</label>
-                                    <select id="themeSelect">
-                                        <option value="light">Light</option>
-                                        <option value="dark">Dark</option>
-                                        <option value="auto">Auto</option>
-                                    </select>
-                                </div>
-                                <div class="setting-item">
-                                    <label for="wallpaperSelect">Wallpaper:</label>
-                                    <select id="wallpaperSelect">
-                                        <option value="default">Default</option>
-                                        <option value="nature">Nature</option>
-                                        <option value="abstract">Abstract</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="settings-section">
-                                <h3>Display</h3>
-                                <div class="setting-item">
-                                    <label for="resolutionSelect">Resolution:</label>
-                                    <select id="resolutionSelect">
-                                        <option value="1080p">1920x1080</option>
-                                        <option value="720p">1280x720</option>
-                                        <option value="480p">854x480</option>
-                                    </select>
-                                </div>
-                                <div class="setting-item">
-                                    <label for="brightnessRange">Brightness:</label>
-                                    <input type="range" id="brightnessRange" min="0" max="100" value="80">
-                                </div>
-                            </div>
-                            <div class="settings-section">
-                                <h3>Sound</h3>
-                                <div class="setting-item">
-                                    <label for="volumeRange">Volume:</label>
-                                    <input type="range" id="volumeRange" min="0" max="100" value="70">
-                                </div>
-                                <div class="setting-item">
-                                    <label for="soundScheme">Sound Scheme:</label>
-                                    <select id="soundScheme">
-                                        <option value="default">Default</option>
-                                        <option value="classic">Classic</option>
-                                        <option value="nature">Nature Sounds</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    break;
-                    
-                default:
-                    windowTitle = appName;
-                    windowContent = `<div style="padding: 20px; text-align: center;"><h2>${appName} Application</h2><p>This application is under development.</p></div>`;
-            }
-            
-            windowElement.innerHTML = `
-                <div class="window-header">
-                    <div class="window-title">
-                        <i class="fas fa-folder" style="color: white;"></i>
-                        <span>${windowTitle}</span>
-                    </div>
-                    <div class="window-controls">
-                        <button class="minimize-btn">−</button>
-                        <button class="maximize-btn">□</button>
-                        <button class="close-btn">×</button>
-                    </div>
-                </div>
-                <div class="window-content">
-                    ${windowContent}
-                </div>
-            `;
-            
-            // إضافة النافذة إلى الحاوية
-            document.getElementById('windowsContainer').appendChild(windowElement);
-            
-            // إضافة إلى قائمة النوافذ النشطة
-            windows.push({
-                id: windowId,
-                element: windowElement,
-                app: appName,
-                title: windowTitle
-            });
-            
-            // جعل النافذة نشطة
-            makeWindowActive(windowId);
-            
-            // إضافة إلى شريط المهام
-            addToTaskbar(windowId, windowTitle, appName);
-            
-            // إعداد التحكم بالنافذة
-            setupWindowControls(windowElement, windowId);
-        }
-
-        // إعداد عناصر التحكم بالنافذة
-        function setupWindowControls(windowElement, windowId) {
-            const header = windowElement.querySelector('.window-header');
-            const minimizeBtn = windowElement.querySelector('.minimize-btn');
-            const maximizeBtn = windowElement.querySelector('.maximize-btn');
-            const closeBtn = windowElement.querySelector('.close-btn');
-            
-            // جعل النافذة نشطة عند النقر عليها
-            windowElement.addEventListener('mousedown', function() {
-                makeWindowActive(windowId);
-            });
-            
-            // تصغير النافذة
-            minimizeBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                windowElement.style.display = 'none';
-                // تحديث شريط المهام
-                const taskbarApp = document.querySelector(`.taskbar-app[data-window="${windowId}"]`);
-                if (taskbarApp) {
-                    taskbarApp.classList.remove('active');
-                }
-            });
-            
-            // تكبير/تصغير النافذة
-            maximizeBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                if (windowElement.classList.contains('maximized')) {
-                    windowElement.classList.remove('maximized');
-                    windowElement.style.width = '';
-                    windowElement.style.height = '';
-                    windowElement.style.top = '';
-                    windowElement.style.left = '';
+                    // تسجيل جلسة المستخدم
+                    WebOSDB.sessions.push({
+                        userId: user.id,
+                        loginTime: new Date().toISOString(),
+                        logoutTime: null
+                    });
+                    WebOSDB.save();
                 } else {
-                    windowElement.classList.add('maximized');
-                    windowElement.style.width = '100%';
-                    windowElement.style.height = 'calc(100% - var(--taskbar-height))';
-                    windowElement.style.top = '0';
-                    windowElement.style.left = '0';
+                    alert('كلمة المرور غير صحيحة!');
                 }
-            });
+            },
             
-            // إغلاق النافذة
-            closeBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                closeWindow(windowId);
-            });
-            
-            // سحب النافذة
-            let isDragging = false;
-            let dragOffset = { x: 0, y: 0 };
-            
-            header.addEventListener('mousedown', function(e) {
-                if (windowElement.classList.contains('maximized')) return;
-                
-                isDragging = true;
-                dragOffset.x = e.clientX - windowElement.offsetLeft;
-                dragOffset.y = e.clientY - windowElement.offsetTop;
-                
-                makeWindowActive(windowId);
-            });
-            
-            document.addEventListener('mousemove', function(e) {
-                if (isDragging) {
-                    windowElement.style.left = (e.clientX - dragOffset.x) + 'px';
-                    windowElement.style.top = (e.clientY - dragOffset.y) + 'px';
-                }
-            });
-            
-            document.addEventListener('mouseup', function() {
-                isDragging = false;
-            });
-        }
-
-        // جعل النافذة نشطة
-        function makeWindowActive(windowId) {
-            const window = windows.find(w => w.id === windowId);
-            if (window) {
-                // إعادة تعيين z-index لجميع النوافذ
-                windows.forEach(w => {
-                    w.element.style.zIndex = 1000;
-                });
-                
-                // جعل النافذة المحددة في المقدمة
-                window.element.style.zIndex = zIndexCounter++;
-                activeWindow = window;
-                
-                // تحديث شريط المهام
-                document.querySelectorAll('.taskbar-app').forEach(app => {
-                    app.classList.remove('active');
-                });
-                
-                const taskbarApp = document.querySelector(`.taskbar-app[data-window="${windowId}"]`);
-                if (taskbarApp) {
-                    taskbarApp.classList.add('active');
-                }
-            }
-        }
-
-        // إضافة إلى شريط المهام
-        function addToTaskbar(windowId, title, appName) {
-            const taskbarApps = document.getElementById('taskbarApps');
-            const taskbarApp = document.createElement('div');
-            taskbarApp.className = 'taskbar-app active';
-            taskbarApp.innerHTML = `<i class="fas fa-${getAppIcon(appName)}"></i> ${title}`;
-            taskbarApp.setAttribute('data-window', windowId);
-            
-            taskbarApp.addEventListener('click', function() {
-                const targetWindow = document.getElementById(windowId);
-                if (targetWindow.style.display === 'none') {
-                    targetWindow.style.display = 'flex';
-                    makeWindowActive(windowId);
-                } else {
-                    if (activeWindow && activeWindow.id === windowId) {
-                        targetWindow.style.display = 'none';
-                        this.classList.remove('active');
-                    } else {
-                        makeWindowActive(windowId);
+            logout: function() {
+                // تحديث وقت تسجيل الخروج
+                if (this.currentUser) {
+                    const session = WebOSDB.sessions.find(s => s.userId === this.currentUser.id && !s.logoutTime);
+                    if (session) {
+                        session.logoutTime = new Date().toISOString();
+                        WebOSDB.save();
                     }
                 }
+                
+                this.currentUser = null;
+                this.windows = [];
+                document.getElementById('windowsContainer').innerHTML = '';
+                document.getElementById('taskbarApps').innerHTML = '';
+                this.showLoginScreen();
+            },
+            
+            lockScreen: function() {
+                this.showLoginScreen();
+            },
+            
+            shutdown: function() {
+                if (confirm('هل تريد إيقاف تشغيل النظام؟')) {
+                    this.logout();
+                }
+            },
+            
+            updateDateTime: function() {
+                const now = new Date();
+                document.getElementById('clock').textContent = now.toLocaleTimeString('ar-EG');
+                document.getElementById('date').textContent = now.toLocaleDateString('ar-EG');
+            },
+            
+            openApp: function(appName) {
+                const windowId = 'window_' + Date.now();
+                const windowElement = document.createElement('div');
+                windowElement.className = 'window';
+                windowElement.id = windowId;
+                windowElement.style.zIndex = this.zIndexCounter++;
+                windowElement.style.left = '100px';
+                windowElement.style.top = '100px';
+                
+                let windowTitle = '';
+                let windowContent = '';
+                
+                switch(appName) {
+                    case 'fileExplorer':
+                        windowTitle = 'مستكشف الملفات';
+                        windowContent = this.getFileExplorerContent();
+                        break;
+                    case 'notepad':
+                        windowTitle = 'المفكرة';
+                        windowContent = this.getNotepadContent();
+                        break;
+                    case 'calculator':
+                        windowTitle = 'الآلة الحاسبة';
+                        windowContent = this.getCalculatorContent();
+                        break;
+                    case 'browser':
+                        windowTitle = 'متصفح الويب';
+                        windowContent = this.getBrowserContent();
+                        break;
+                    case 'mediaPlayer':
+                        windowTitle = 'مشغل الوسائط';
+                        windowContent = this.getMediaPlayerContent();
+                        break;
+                    case 'settings':
+                        windowTitle = 'الإعدادات';
+                        windowContent = this.getSettingsContent();
+                        break;
+                    case 'userManager':
+                        windowTitle = 'إدارة المستخدمين';
+                        windowContent = this.getUserManagerContent();
+                        break;
+                    default:
+                        windowTitle = appName;
+                        windowContent = `<div style="padding: 20px; text-align: center;"><h2>${appName}</h2><p>هذا التطبيق قيد التطوير</p></div>`;
+                }
+                
+                windowElement.innerHTML = `
+                    <div class="window-header">
+                        <div class="window-title">
+                            <i class="fas fa-folder" style="color: white;"></i>
+                            <span>${windowTitle}</span>
+                        </div>
+                        <div class="window-controls">
+                            <button class="minimize-btn">−</button>
+                            <button class="maximize-btn">□</button>
+                            <button class="close-btn">×</button>
+                        </div>
+                    </div>
+                    <div class="window-content">
+                        ${windowContent}
+                    </div>
+                `;
+                
+                document.getElementById('windowsContainer').appendChild(windowElement);
+                
+                this.windows.push({
+                    id: windowId,
+                    element: windowElement,
+                    app: appName,
+                    title: windowTitle
+                });
+                
+                this.makeWindowActive(windowId);
+                this.addToTaskbar(windowId, windowTitle, appName);
+                this.setupWindowControls(windowElement, windowId);
+            },
+            
+            getFileExplorerContent: function() {
+                const userFiles = WebOSDB.getFiles(this.currentUser.id);
+                
+                let filesHTML = '';
+                userFiles.forEach(file => {
+                    let icon = 'fa-file';
+                    if (file.type === 'folder') icon = 'fa-folder';
+                    else if (file.type === 'image') icon = 'fa-file-image';
+                    else if (file.type === 'document') icon = 'fa-file-alt';
+                    else if (file.type === 'video') icon = 'fa-file-video';
+                    
+                    filesHTML += `
+                        <div class="file-item" data-file="${file.id}">
+                            <i class="fas ${icon}" style="color: ${file.type === 'folder' ? '#0078d7' : '#666'};"></i>
+                            <span>${file.name}</span>
+                        </div>
+                    `;
+                });
+                
+                return `
+                    <div class="file-explorer">
+                        <div class="sidebar">
+                            <h3>الوصول السريع</h3>
+                            <ul>
+                                <li><i class="fas fa-desktop"></i> سطح المكتب</li>
+                                <li><i class="fas fa-download"></i> التنزيلات</li>
+                                <li><i class="fas fa-file"></i> المستندات</li>
+                                <li><i class="fas fa-image"></i> الصور</li>
+                                <li><i class="fas fa-music"></i> الموسيقى</li>
+                                <li><i class="fas fa-film"></i> الفيديوهات</li>
+                            </ul>
+                            <h3>هذا الكمبيوتر</h3>
+                            <ul>
+                                <li><i class="fas fa-hdd"></i> القرص المحلي (C:)</li>
+                                <li><i class="fas fa-hdd"></i> القرص المحلي (D:)</li>
+                                <li><i class="fas fa-compact-disc"></i> محرك الأقراص (E:)</li>
+                            </ul>
+                        </div>
+                        <div class="content-area">
+                            <div class="toolbar">
+                                <button><i class="fas fa-arrow-left"></i> رجوع</button>
+                                <button><i class="fas fa-arrow-right"></i> تقدم</button>
+                                <button><i class="fas fa-arrow-up"></i> أعلى</button>
+                                <button><i class="fas fa-sync-alt"></i> تحديث</button>
+                                <button><i class="fas fa-plus"></i> جديد</button>
+                            </div>
+                            <div class="files-grid">
+                                ${filesHTML}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            getNotepadContent: function() {
+                return `
+                    <textarea class="notepad-content" placeholder="ابدأ الكتابة...">مرحباً بك في WebOS!
+يمكنك استخدام هذا التطبيق لكتابة وتحرير الملفات النصية.
+
+الميزات:
+- تحرير النصوص البسيط
+- وظيفة الحفظ التلقائي
+- التنسيق الأساسي
+
+جربها الآن!</textarea>
+                `;
+            },
+            
+            getCalculatorContent: function() {
+                return `
+                    <div class="calculator">
+                        <div class="calculator-display" id="calcDisplay">0</div>
+                        <button onclick="WebOS.calculatorAction('C')">C</button>
+                        <button onclick="WebOS.calculatorAction('±')">±</button>
+                        <button onclick="WebOS.calculatorAction('%')">%</button>
+                        <button onclick="WebOS.calculatorAction('/')" class="operator">/</button>
+                        <button onclick="WebOS.calculatorAction('7')">7</button>
+                        <button onclick="WebOS.calculatorAction('8')">8</button>
+                        <button onclick="WebOS.calculatorAction('9')">9</button>
+                        <button onclick="WebOS.calculatorAction('*')" class="operator">×</button>
+                        <button onclick="WebOS.calculatorAction('4')">4</button>
+                        <button onclick="WebOS.calculatorAction('5')">5</button>
+                        <button onclick="WebOS.calculatorAction('6')">6</button>
+                        <button onclick="WebOS.calculatorAction('-')" class="operator">-</button>
+                        <button onclick="WebOS.calculatorAction('1')">1</button>
+                        <button onclick="WebOS.calculatorAction('2')">2</button>
+                        <button onclick="WebOS.calculatorAction('3')">3</button>
+                        <button onclick="WebOS.calculatorAction('+')" class="operator">+</button>
+                        <button onclick="WebOS.calculatorAction('0')" style="grid-column: span 2;">0</button>
+                        <button onclick="WebOS.calculatorAction('.')">.</button>
+                        <button onclick="WebOS.calculatorAction('=')" class="equals">=</button>
+                    </div>
+                `;
+            },
+            
+            getBrowserContent: function() {
+                return `
+                    <div class="browser-toolbar">
+                        <button><i class="fas fa-arrow-left"></i></button>
+                        <button><i class="fas fa-arrow-right"></i></button>
+                        <button><i class="fas fa-redo"></i></button>
+                        <input type="text" placeholder="ابحث أو أدخل اسم الموقع" value="https://www.example.com">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <iframe class="browser-content" src="https://www.example.com"></iframe>
+                `;
+            },
+            
+            getMediaPlayerContent: function() {
+                return `
+                    <div class="media-player">
+                        <video controls>
+                            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                            متصفحك لا يديع تشغيل الفيديو
+                        </video>
+                        <div class="media-controls">
+                            <button><i class="fas fa-play"></i> تشغيل</button>
+                            <button><i class="fas fa-pause"></i> إيقاف</button>
+                            <button><i class="fas fa-stop"></i> وقف</button>
+                            <button><i class="fas fa-volume-up"></i> الصوت</button>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            getSettingsContent: function() {
+                return `
+                    <div class="settings-panel">
+                        <div class="settings-section">
+                            <h3>النظام</h3>
+                            <div class="setting-item">
+                                <label for="themeSelect">السمة:</label>
+                                <select id="themeSelect">
+                                    <option value="light">فاتح</option>
+                                    <option value="dark">داكن</option>
+                                    <option value="auto">تلقائي</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label for="wallpaperSelect">خلفية سطح المكتب:</label>
+                                <select id="wallpaperSelect">
+                                    <option value="default">الافتراضية</option>
+                                    <option value="nature">الطبيعة</option>
+                                    <option value="abstract">مجردة</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="settings-section">
+                            <h3>العرض</h3>
+                            <div class="setting-item">
+                                <label for="resolutionSelect">الدقة:</label>
+                                <select id="resolutionSelect">
+                                    <option value="1080p">1920x1080</option>
+                                    <option value="720p">1280x720</option>
+                                    <option value="480p">854x480</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label for="brightnessRange">السطوع:</label>
+                                <input type="range" id="brightnessRange" min="0" max="100" value="80">
+                            </div>
+                        </div>
+                        <div class="settings-section">
+                            <h3>الصوت</h3>
+                            <div class="setting-item">
+                                <label for="volumeRange">مستوى الصوت:</label>
+                                <input type="range" id="volumeRange" min="0" max="100" value="70">
+                            </div>
+                            <div class="setting-item">
+                                <label for="soundScheme">نظام الصوت:</label>
+                                <select id="soundScheme">
+                                    <option value="default">الافتراضي</option>
+                                    <option value="classic">كلاسيكي</option>
+                                    <option value="nature">أصوات الطبيعة</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            getUserManagerContent: function() {
+                let usersHTML = '';
+                WebOSDB.users.forEach(user => {
+                    usersHTML += `
+                        <div class="user-card">
+                            <img src="${user.avatar || 'https://i.pravatar.cc/150?img=12'}" alt="${user.username}">
+                            <div class="user-info-full">
+                                <h4>${user.username}</h4>
+                                <p>${user.email} - ${user.role === 'admin' ? 'مسؤول' : 'مستخدم'}</p>
+                                <p>تم الإنشاء: ${new Date(user.createdAt).toLocaleDateString('ar-EG')}</p>
+                            </div>
+                            <div class="user-actions">
+                                <button class="btn-edit" onclick="WebOS.editUser(${user.id})">تعديل</button>
+                                ${user.id !== this.currentUser.id ? `<button class="btn-delete" onclick="WebOS.deleteUser(${user.id})">حذف</button>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                return `
+                    <div class="user-manager">
+                        <h3>إدارة المستخدمين</h3>
+                        <button class="btn" onclick="WebOS.showAddUserForm()"><i class="fas fa-plus"></i> إضافة مستخدم</button>
+                        <div class="user-list">
+                            ${usersHTML}
+                        </div>
+                    </div>
+                `;
+            },
+            
+            showAddUserForm: function() {
+                const username = prompt('أدخل اسم المستخدم:');
+                if (!username) return;
+                
+                const password = prompt('أدخل كلمة المرور:');
+                if (!password) return;
+                
+                const email = prompt('أدخل البريد الإلكتروني:');
+                if (!email) return;
+                
+                const role = confirm('هل تريد جعل هذا المستخدم مسؤولاً؟') ? 'admin' : 'user';
+                
+                WebOSDB.addUser({
+                    username,
+                    password,
+                    email,
+                    role,
+                    avatar: `https://i.pravatar.cc/150?img=${WebOSDB.users.length + 10}`
+                });
+                
+                alert('تم إضافة المستخدم بنجاح!');
+                
+                // إعادة فتح نافذة إدارة المستخدمين لتحديث القائمة
+                const userManagerWindow = this.windows.find(w => w.app === 'userManager');
+                if (userManagerWindow) {
+                    this.closeWindow(userManagerWindow.id);
+                    this.openApp('userManager');
+                }
+            },
+            
+            editUser: function(userId) {
+                const user = WebOSDB.users.find(u => u.id === userId);
+                if (!user) return;
+                
+                const newUsername = prompt('اسم المستخدم الجديد:', user.username);
+                if (!newUsername) return;
+                
+                const newEmail = prompt('البريد الإلكتروني الجديد:', user.email);
+                if (!newEmail) return;
+                
+                const newRole = confirm('هل تريد جعل هذا المستخدم مسؤولاً؟') ? 'admin' : 'user';
+                
+                WebOSDB.updateUser(userId, {
+                    username: newUsername,
+                    email: newEmail,
+                    role: newRole
+                });
+                
+                alert('تم تحديث المستخدم بنجاح!');
+                
+                // إعادة فتح نافذة إدارة المستخدمين لتحديث القائمة
+                const userManagerWindow = this.windows.find(w => w.app === 'userManager');
+                if (userManagerWindow) {
+                    this.closeWindow(userManagerWindow.id);
+                    this.openApp('userManager');
+                }
+            },
+            
+            deleteUser: function(userId) {
+                if (confirm('هل أنت متأكد من حذف هذا المستخدم؟')) {
+                    WebOSDB.deleteUser(userId);
+                    alert('تم حذف المستخدم بنجاح!');
+                    
+                    // إعادة فتح نافذة إدارة المستخدمين لتحديث القائمة
+                    const userManagerWindow = this.windows.find(w => w.app === 'userManager');
+                    if (userManagerWindow) {
+                        this.closeWindow(userManagerWindow.id);
+                        this.openApp('userManager');
+                    }
+                }
+            },
+            
+            calculatorAction: function(action) {
+                if (action === 'C') {
+                    this.calculatorValue = '0';
+                } else if (action === '=') {
+                    try {
+                        let expression = this.calculatorValue.replace(/×/g, '*').replace(/÷/g, '/');
+                        this.calculatorValue = eval(expression).toString();
+                    } catch (e) {
+                        this.calculatorValue = 'Error';
+                    }
+                } else {
+                    if (this.calculatorValue === '0' || this.calculatorValue === 'Error') {
+                        this.calculatorValue = action;
+                    } else {
+                        this.calculatorValue += action;
+                    }
+                }
+                
+                const display = document.getElementById('calcDisplay');
+                if (display) {
+                    display.textContent = this.calculatorValue;
+                }
+            },
+            
+            setupWindowControls: function(windowElement, windowId) {
+                const header = windowElement.querySelector('.window-header');
+                const minimizeBtn = windowElement.querySelector('.minimize-btn');
+                const maximizeBtn = windowElement.querySelector('.maximize-btn');
+                const closeBtn = windowElement.querySelector('.close-btn');
+                
+                windowElement.addEventListener('mousedown', () => {
+                    this.makeWindowActive(windowId);
+                });
+                
+                minimizeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    windowElement.style.display = 'none';
+                    const taskbarApp = document.querySelector(`.taskbar-app[data-window="${windowId}"]`);
+                    if (taskbarApp) {
+                        taskbarApp.classList.remove('active');
+                    }
+                });
+                
+                maximizeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (windowElement.classList.contains('maximized')) {
+                        windowElement.classList.remove('maximized');
+                        windowElement.style.width = '';
+                        windowElement.style.height = '';
+                        windowElement.style.top = '';
+                        windowElement.style.left = '';
+                    } else {
+                        windowElement.classList.add('maximized');
+                        windowElement.style.width = '100%';
+                        windowElement.style.height = 'calc(100% - var(--taskbar-h))';
+                        windowElement.style.top = '0';
+                        windowElement.style.left = '0';
+                    }
+                });
+                
+                closeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.closeWindow(windowId);
+                });
+                
+                let isDragging = false;
+                let dragOffset = { x: 0, y: 0 };
+                
+                header.addEventListener('mousedown', (e) => {
+                    if (windowElement.classList.contains('maximized')) return;
+                    
+                    isDragging = true;
+                    dragOffset.x = e.clientX - windowElement.offsetLeft;
+                    dragOffset.y = e.clientY - windowElement.offsetTop;
+                    
+                    this.makeWindowActive(windowId);
+                });
+                
+                document.addEventListener('mousemove', (e) => {
+                    if (isDragging) {
+                        windowElement.style.left = (e.clientX - dragOffset.x) + 'px';
+                        windowElement.style.top = (e.clientY - dragOffset.y) + 'px';
+                    }
+                });
+                
+                document.addEventListener('mouseup', () => {
+                    isDragging = false;
+                });
+            },
+            
+            makeWindowActive: function(windowId) {
+                const window = this.windows.find(w => w.id === windowId);
+                if (window) {
+                    this.windows.forEach(w => {
+                        w.element.style.zIndex = 1000;
+                    });
+                    
+                    window.element.style.zIndex = this.zIndexCounter++;
+                    this.activeWindow = window;
+                    
+                    document.querySelectorAll('.taskbar-app').forEach(app => {
+                        app.classList.remove('active');
+                    });
+                    
+                    const taskbarApp = document.querySelector(`.taskbar-app[data-window="${windowId}"]`);
+                    if (taskbarApp) {
+                        taskbarApp.classList.add('active');
+                    }
+                }
+            },
+            
+            addToTaskbar: function(windowId, title, appName) {
+                const taskbarApps = document.getElementById('taskbarApps');
+                const taskbarApp = document.createElement('div');
+                taskbarApp.className = 'taskbar-app active';
+                taskbarApp.innerHTML = `<i class="fas fa-${this.getAppIcon(appName)}"></i> ${title}`;
+                taskbarApp.setAttribute('data-window', windowId);
+                
+                taskbarApp.addEventListener('click', () => {
+                    const targetWindow = document.getElementById(windowId);
+                    if (targetWindow.style.display === 'none') {
+                        targetWindow.style.display = 'flex';
+                        this.makeWindowActive(windowId);
+                    } else {
+                        if (this.activeWindow && this.activeWindow.id === windowId) {
+                            targetWindow.style.display = 'none';
+                            taskbarApp.classList.remove('active');
+                        } else {
+                            this.makeWindowActive(windowId);
+                        }
+                    }
+                });
+                
+                taskbarApps.appendChild(taskbarApp);
+            },
+            
+            getAppIcon: function(appName) {
+                const icons = {
+                    'fileExplorer': 'folder',
+                    'notepad': 'file-alt',
+                    'calculator': 'calculator',
+                    'browser': 'globe',
+                    'mediaPlayer': 'play-circle',
+                    'settings': 'cog',
+                    'userManager': 'users',
+                    'terminal': 'terminal',
+                    'calendar': 'calendar-alt',
+                    'camera': 'camera',
+                    'mail': 'envelope',
+                    'store': 'shopping-bag',
+                    'recycleBin': 'trash-alt'
+                };
+                
+                return icons[appName] || 'window-maximize';
+            },
+            
+            closeWindow: function(windowId) {
+                const windowIndex = this.windows.findIndex(w => w.id === windowId);
+                if (windowIndex !== -1) {
+                    const windowElement = document.getElementById(windowId);
+                    if (windowElement) {
+                        windowElement.remove();
+                    }
+                    
+                    const taskbarApp = document.querySelector(`.taskbar-app[data-window="${windowId}"]`);
+                    if (taskbarApp) {
+                        taskbarApp.remove();
+                    }
+                    
+                    this.windows.splice(windowIndex, 1);
+                    
+                    if (this.activeWindow && this.activeWindow.id === windowId) {
+                        this.activeWindow = this.windows.length > 0 ? this.windows[this.windows.length - 1] : null;
+                    }
+                }
+            }
+        };
+
+        // وظائف الإعداد
+        let currentSetupStep = 1;
+        
+        function nextSetupStep() {
+            document.getElementById(`setupStep${currentSetupStep}`).classList.remove('active');
+            currentSetupStep++;
+            document.getElementById(`setupStep${currentSetupStep}`).classList.add('active');
+        }
+        
+        function prevSetupStep() {
+            document.getElementById(`setupStep${currentSetupStep}`).classList.remove('active');
+            currentSetupStep--;
+            document.getElementById(`setupStep${currentSetupStep}`).classList.add('active');
+        }
+        
+        function cancelSetup() {
+            if (confirm('هل تريد إلغاء الإعداد؟ سيتم إغلاق النظام.')) {
+                window.close();
+            }
+        }
+        
+        function completeSetup() {
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+            const email = document.getElementById('adminEmail').value;
+            
+            if (!username || !password || !email) {
+                alert('يرجى ملء جميع الحقول!');
+                return;
+            }
+            
+            // إضافة المستخدم الرئيسي
+            WebOSDB.addUser({
+                username,
+                password,
+                email,
+                role: 'admin',
+                avatar: 'https://i.pravatar.cc/150?img=12'
             });
             
-            taskbarApps.appendChild(taskbarApp);
-        }
-
-        // الحصول على أيقونة التطبيق
-        function getAppIcon(appName) {
-            const icons = {
-                'fileExplorer': 'folder',
-                'notepad': 'file-alt',
-                'calculator': 'calculator',
-                'browser': 'globe',
-                'mediaPlayer': 'play-circle',
-                'settings': 'cog',
-                'paint': 'palette',
-                'terminal': 'terminal',
-                'calendar': 'calendar-alt',
-                'camera': 'camera',
-                'mail': 'envelope',
-                'store': 'shopping-bag',
-                'recycleBin': 'trash-alt'
-            };
+            // حفظ إعدادات النظام
+            const language = document.getElementById('systemLanguage').value;
+            const theme = document.getElementById('systemTheme').value;
+            const wallpaper = document.getElementById('wallpaper').value;
             
-            return icons[appName] || 'window-maximize';
+            WebOSDB.updateSettings({
+                language,
+                theme,
+                wallpaper
+            });
+            
+            // إضافة بعض الملفات الافتراضية
+            WebOSDB.addFile({
+                userId: 1,
+                name: 'مستنداتي',
+                type: 'folder',
+                size: '0 KB',
+                path: '/Users/Admin/مستنداتي'
+            });
+            
+            WebOSDB.addFile({
+                userId: 1,
+                name: 'ملاحظات.txt',
+                type: 'document',
+                size: '1.2 KB',
+                path: '/Users/Admin/ملاحظات.txt',
+                content: 'مرحباً بك في WebOS!'
+            });
+            
+            alert('تم إعداد النظام بنجاح! يمكنك الآن تسجيل الدخول.');
+            WebOS.showLoginScreen();
         }
-
-        // إغلاق النافذة
-        function closeWindow(windowId) {
-            const windowIndex = windows.findIndex(w => w.id === windowId);
-            if (windowIndex !== -1) {
-                // إزالة النافذة من DOM
-                const windowElement = document.getElementById(windowId);
-                if (windowElement) {
-                    windowElement.remove();
+        
+        function showUserManager() {
+            if (WebOSDB.users.length === 0) {
+                alert('لا يوجد مستخدمين! يرجى إكمال إعداد النظام أولاً.');
+                return;
+            }
+            
+            // إذا كان هناك مستخدمين، عرض قائمة المستخدمين
+            let usersList = 'اختر مستخدم للدخول:\n\n';
+            WebOSDB.users.forEach((user, index) => {
+                usersList += `${index + 1}. ${user.username} (${user.role === 'admin' ? 'مسؤول' : 'مستخدم'})\n`;
+            });
+            
+            const userChoice = prompt(usersList + '\nأدخل رقم المستخدم:');
+            if (userChoice && !isNaN(userChoice)) {
+                const userIndex = parseInt(userChoice) - 1;
+                if (userIndex >= 0 && userIndex < WebOSDB.users.length) {
+                    const selectedUser = WebOSDB.users[userIndex];
+                    document.getElementById('loginUsername').textContent = selectedUser.username;
+                    document.getElementById('loginUserImage').src = selectedUser.avatar || 'https://i.pravatar.cc/150?img=12';
                 }
-                
-                // إزالة من شريط المهام
-                const taskbarApp = document.querySelector(`.taskbar-app[data-window="${windowId}"]`);
-                if (taskbarApp) {
-                    taskbarApp.remove();
-                }
-                
-                // إزالة من المصفوفة
-                windows.splice(windowIndex, 1);
-                
-                // إذا كانت النافذة النشطة هي التي أغلقت، اجعل النافذة التالية نشطة
-                if (activeWindow && activeWindow.id === windowId) {
-                    activeWindow = windows.length > 0 ? windows[windows.length - 1] : null;
-                }
             }
         }
 
-        // وظائف الآلة الحاسبة
-        function appendToCalculator(value) {
-            if (calculatorValue === '0' || calculatorValue === 'Error') {
-                calculatorValue = value;
-            } else {
-                calculatorValue += value;
-            }
-            updateCalculatorDisplay();
-        }
-
-        function clearCalculator() {
-            calculatorValue = '0';
-            previousValue = '0';
-            operation = null;
-            updateCalculatorDisplay();
-        }
-
-        function calculateResult() {
-            try {
-                // استبدال الرموز لجعلها صالحة للتقييم
-                let expression = calculatorValue.replace(/×/g, '*').replace(/÷/g, '/');
-                calculatorValue = eval(expression).toString();
-            } catch (e) {
-                calculatorValue = 'Error';
-            }
-            updateCalculatorDisplay();
-        }
-
-        function updateCalculatorDisplay() {
-            const display = document.getElementById('calcDisplay');
-            if (display) {
-                display.textContent = calculatorValue;
-            }
-        }
+        // بدء تشغيل النظام
+        window.addEventListener('load', () => {
+            WebOS.init();
+        });
     </script>
 </body>
 </html>

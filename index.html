@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebOS - Web Operating System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- شاشة تسجيل الدخول -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <div class="user-profile">
+                <img src="https://via.placeholder.com/100" alt="User">
+                <h2>User</h2>
+            </div>
+            <div class="password-input">
+                <input type="password" placeholder="Enter password">
+                <button id="loginBtn">Sign In</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- سطح المكتب -->
+    <div id="desktop" class="desktop">
+        <!-- شريط المهام -->
+        <div class="taskbar">
+            <div class="start-menu-btn" id="startMenuBtn">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMjAgMjVoNjB2MTBIMjBWMjV6bTAgMjBoNjB2MTBIMjBWNDV6bTAgMjBoNjB2MTBIMjBWNjV6Ii8+PC9zdmc+" alt="Start">
+            </div>
+            <div class="taskbar-apps" id="taskbarApps"></div>
+            <div class="system-tray">
+                <span id="clock">12:00 PM</span>
+                <span id="date">Jan 1, 2023</span>
+            </div>
+        </div>
+
+        <!-- قائمة ابدأ -->
+        <div id="startMenu" class="start-menu">
+            <div class="start-menu-left">
+                <div class="app-list">
+                    <div class="app-item" data-app="fileExplorer">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzAwNzgiIGQ9Ik0xMCA0SDRjLTEuMSAwLTEuOTkuOS0xLjk5IDJMMiAxOGMwIDEuMS44OSAyIDIgMmgxNmMxLjEgMCAyLS45IDItMlY4YzAtMS4xLS45LTItMi0yaC04bC0yLTJ6Ii8+PC9zdmc+" alt="File Explorer">
+                        <span>File Explorer</span>
+                    </div>
+                    <div class="app-item" data-app="notepad">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzAwNzgiIGQ9Ik0xOSAzSDVjLTEuMSAwLTIgLjktMiAydjE0YzAgMS4xLjkgMiAyIDJoMTRjMS4xIDAgMi0uOSAyLTJWNWMwLTEuMS0uOS0yLTItMnptLTUgMTRIN1Y5aDd2OHoiLz48L3N2Zz4=" alt="Notepad">
+                        <span>Notepad</span>
+                    </div>
+                    <div class="app-item" data-app="calculator">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzAwNzgiIGQ9Ik0xOSAzSDVjLTEuMSAwLTIgLjktMiAydjE0YzAgMS4xLjkgMiAyIDJoMTRjMS4xIDAgMi0uOSAyLTJWNWMwLTEuMS0uOS0yLTItMnptLTQgMmgydjJoLTJWNXptLTQgMGgydjJoLTJWNXptLTQgMGgydjJIN1Y1em0xMCA0SDV2MmgxNnYtMnptLTQgNGgydjJoLTJ2LTJ6bS00IDBoMnYySDd2LTJ6bS00IDBoMnYySDN2LTJ6bTggNGgydjJoLTJ2LTJ6bS00IDBoMnYySDd2LTJ6bS00IDBoMnYySDN2LTJ6Ii8+PC9zdmc+" alt="Calculator">
+                        <span>Calculator</span>
+                    </div>
+                    <div class="app-item" data-app="browser">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzAwNzgiIGQ9Ik0xMiAyQzYuNDggMiAyIDYuNDggMiAxMnM0LjQ4IDEwIDEwIDEwIDEwLTQuNDggMTAtMTBTMTcuNTIgMiAxMiAyem0tMSAxN2MtMy4zMSAwLTYtMi42OS02LTZzMi42OS02IDYtNiA2IDIuNjkgNiA2LTIuNjkgNi02IDZ6Ii8+PHBhdGggZmlsbD0iIzAwNzgiIGQ9Ik0xMiA0Yy00LjQyIDAtOCAzLjU4LTggOHMzLjU4IDggOCA4IDgtMy41OCA4LTgtMy41OC04LTgtOHptMCAxM2MtMi43NiAwLTUtMi4yNC01LTVzMi4yNC01IDUtNSA1IDIuيNDUgNS01LTIuMjQtNS01LTV6Ii8+PC9zdmc+" alt="Browser">
+                        <span>Web Browser</span>
+                    </div>
+                </div>
+            </div>
+            <div class="start-menu-right">
+                <div class="power-options">
+                    <button id="shutdownBtn">Shutdown</button>
+                    <button id="restartBtn">Restart</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- النوافذ المفتوحة -->
+        <div id="windowsContainer" class="windows-container"></div>
+
+        <!-- أيقونات سطح المكتب -->
+        <div class="desktop-icons">
+            <div class="desktop-icon" data-app="fileExplorer">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTEwIDRINGMtMS4xIDAtMS45OS45LTEuOTkgMkwyIDE4YzAgMS4xLjg5IDIgMiAyaDE2YzEuMSAwIDItLjkgMi0yVjhjMC0xLjEtLjktMi0yLTJoLThsLTItMnoiLz48L3N2Zz4=" alt="File Explorer">
+                <span>File Explorer</span>
+            </div>
+            <div class="desktop-icon" data-app="notepad">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTE5IDNINWMtMS4xIDAtMiAuOS0yIDJ2MTRjMCAxLjEuOSAyIDIgMmgxNGMxLjEgMCAyLS45IDItMlY1YzAtMS4xLS45LTItMi0yem0tNSA0SDdWOWg3djh6Ii8+PC9zdmc+" alt="Notepad">
+                <span>Notepad</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- قوالب التطبيقات -->
+    <template id="windowTemplate">
+        <div class="window">
+            <div class="window-header">
+                <div class="window-title"></div>
+                <div class="window-controls">
+                    <button class="minimize-btn">−</button>
+                    <button class="maximize-btn">□</button>
+                    <button class="close-btn">×</button>
+                </div>
+            </div>
+            <div class="window-content"></div>
+        </div>
+    </template>
+
+    <script src="script.js"></script>
+</body>
+</html>

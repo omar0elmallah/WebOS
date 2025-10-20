@@ -3,20 +3,745 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebOS - Web Operating System</title>
-    <link rel="stylesheet" href="style.css">
+    <title>WebOS - Advanced Web Operating System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* جميع أنماط CSS السابقة هنا */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-color: #0078d7;
+            --secondary-color: #106ebe;
+            --accent-color: #4CAF50;
+            --dark-color: #1e1e1e;
+            --light-color: #f3f3f3;
+            --taskbar-height: 45px;
+            --startmenu-width: 500px;
+            --startmenu-height: 600px;
+        }
+
+        body {
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            height: 100vh;
+            user-select: none;
+        }
+
+        /* شاشة تسجيل الدخول */
+        .login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a3c6e 0%, #0d2b52 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            color: white;
+        }
+
+        .login-container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1s;
+        }
+
+        .user-profile {
+            margin-bottom: 30px;
+        }
+
+        .user-profile img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            border: 3px solid white;
+        }
+
+        .password-input {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .password-input input {
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            width: 250px;
+            font-size: 16px;
+        }
+
+        .password-input button {
+            padding: 12px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        .password-input button:hover {
+            background: var(--secondary-color);
+        }
+
+        /* سطح المكتب */
+        .desktop {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            background: url('https://images.unsplash.com/photo-1505506874110-6a7a69069a08?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            position: relative;
+        }
+
+        /* شريط المهام */
+        .taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: var(--taskbar-height);
+            background: rgba(30, 30, 30, 0.9);
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            z-index: 999;
+            backdrop-filter: blur(10px);
+        }
+
+        .start-menu-btn {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .start-menu-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .start-menu-btn img {
+            width: 25px;
+            height: 25px;
+        }
+
+        .taskbar-apps {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            margin-left: 10px;
+            gap: 5px;
+        }
+
+        .taskbar-app {
+            padding: 8px 15px;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            transition: background 0.3s;
+        }
+
+        .taskbar-app:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .taskbar-app.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .system-tray {
+            display: flex;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+            gap: 15px;
+        }
+
+        .system-icon {
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 3px;
+            transition: background 0.3s;
+        }
+
+        .system-icon:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* قائمة ابدأ */
+        .start-menu {
+            position: fixed;
+            bottom: var(--taskbar-height);
+            left: 0;
+            width: var(--startmenu-width);
+            height: var(--startmenu-height);
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px 10px 0 0;
+            display: none;
+            grid-template-columns: 1fr 200px;
+            z-index: 998;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.3s;
+        }
+
+        .start-menu-left {
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .pinned-apps, .all-apps {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .app-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 10px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.3s;
+            text-align: center;
+        }
+
+        .app-item:hover {
+            background: rgba(0, 120, 215, 0.1);
+        }
+
+        .app-item img {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 8px;
+        }
+
+        .app-item span {
+            font-size: 12px;
+            color: #333;
+        }
+
+        .start-menu-right {
+            background: rgba(0, 0, 0, 0.03);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .user-info img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .user-details h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .user-details p {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .power-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .power-options button {
+            padding: 12px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .power-options button:hover {
+            background: var(--secondary-color);
+        }
+
+        /* أيقونات سطح المكتب */
+        .desktop-icons {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .desktop-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 80px;
+            cursor: pointer;
+            text-align: center;
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+            padding: 10px 5px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .desktop-icon:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .desktop-icon.selected {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .desktop-icon img {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 8px;
+            filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.5));
+        }
+
+        .desktop-icon span {
+            font-size: 13px;
+        }
+
+        /* النوافذ */
+        .windows-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: calc(100% - var(--taskbar-height));
+            pointer-events: none;
+        }
+
+        .window {
+            position: absolute;
+            min-width: 400px;
+            min-height: 300px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            pointer-events: all;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            animation: windowOpen 0.3s;
+        }
+
+        .window.maximized {
+            width: 100% !important;
+            height: calc(100% - var(--taskbar-height)) !important;
+            top: 0 !important;
+            left: 0 !important;
+            border-radius: 0;
+        }
+
+        .window-header {
+            height: 35px;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+            cursor: move;
+            user-select: none;
+        }
+
+        .window-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .window-title img {
+            width: 16px;
+            height: 16px;
+        }
+
+        .window-controls {
+            display: flex;
+        }
+
+        .window-controls button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .window-controls button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .window-content {
+            flex: 1;
+            overflow: auto;
+            background: var(--light-color);
+        }
+
+        /* تطبيقات محددة */
+        .file-explorer {
+            display: flex;
+            height: 100%;
+        }
+
+        .file-explorer .sidebar {
+            width: 220px;
+            background: #f8f8f8;
+            padding: 15px;
+            border-right: 1px solid #ddd;
+            overflow-y: auto;
+        }
+
+        .file-explorer .sidebar h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .file-explorer .sidebar ul {
+            list-style: none;
+        }
+
+        .file-explorer .sidebar li {
+            padding: 8px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .file-explorer .sidebar li:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .file-explorer .content-area {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .file-explorer .toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .file-explorer .toolbar button {
+            padding: 6px 12px;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+        }
+
+        .file-explorer .toolbar button:hover {
+            background: #f0f0f0;
+        }
+
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+        }
+
+        .file-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            text-align: center;
+            transition: background 0.3s;
+        }
+
+        .file-item:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .file-item img {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 8px;
+        }
+
+        .file-item span {
+            font-size: 12px;
+            word-break: break-word;
+        }
+
+        .notepad-content {
+            width: 100%;
+            height: 100%;
+            border: none;
+            resize: none;
+            font-family: 'Consolas', monospace;
+            font-size: 14px;
+            padding: 15px;
+            line-height: 1.5;
+        }
+
+        .calculator {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            max-width: 300px;
+            margin: 20px auto;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 10px;
+        }
+
+        .calculator-display {
+            grid-column: 1 / -1;
+            height: 50px;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: right;
+            font-size: 20px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            font-family: 'Consolas', monospace;
+        }
+
+        .calculator button {
+            height: 50px;
+            border: 1px solid #ccc;
+            background: white;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 5px;
+            transition: background 0.2s;
+        }
+
+        .calculator button:hover {
+            background: #f0f0f0;
+        }
+
+        .calculator .operator {
+            background: #f0f0f0;
+        }
+
+        .calculator .equals {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .browser-content {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .browser-toolbar {
+            display: flex;
+            padding: 10px;
+            background: #f3f3f3;
+            border-bottom: 1px solid #ddd;
+            gap: 10px;
+        }
+
+        .browser-toolbar input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .browser-toolbar button {
+            padding: 8px 15px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .browser-toolbar button:hover {
+            background: var(--secondary-color);
+        }
+
+        .media-player {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .media-player video {
+            max-width: 100%;
+            max-height: 400px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .media-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .media-controls button {
+            padding: 10px 15px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .media-controls button:hover {
+            background: var(--secondary-color);
+        }
+
+        .settings-panel {
+            padding: 20px;
+        }
+
+        .settings-section {
+            margin-bottom: 25px;
+        }
+
+        .settings-section h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .setting-item label {
+            font-size: 14px;
+        }
+
+        .setting-item select, .setting-item input {
+            padding: 6px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        /* الرسوم المتحركة */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes windowOpen {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* التمرير المخصص */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+    </style>
 </head>
 <body>
     <!-- شاشة تسجيل الدخول -->
     <div id="loginScreen" class="login-screen">
         <div class="login-container">
             <div class="user-profile">
-                <img src="https://via.placeholder.com/100" alt="User">
-                <h2>User</h2>
+                <img src="https://i.pravatar.cc/150?img=12" alt="User">
+                <h2>Ahmed Mohamed</h2>
             </div>
             <div class="password-input">
-                <input type="password" placeholder="Enter password">
-                <button id="loginBtn">Sign In</button>
+                <input type="password" placeholder="Enter password" id="passwordInput">
+                <button id="loginBtn">Sign In <i class="fas fa-arrow-right"></i></button>
             </div>
         </div>
     </div>
@@ -26,41 +751,98 @@
         <!-- شريط المهام -->
         <div class="taskbar">
             <div class="start-menu-btn" id="startMenuBtn">
-                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMjAgMjVoNjB2MTBIMjBWMjV6bTAgMjBoNjB2MTBIMjBWNDV6bTAgMjBoNjB2MTBIMjBWNjV6Ii8+PC9zdmc+" alt="Start">
+                <i class="fab fa-windows fa-lg" style="color: white;"></i>
             </div>
             <div class="taskbar-apps" id="taskbarApps"></div>
             <div class="system-tray">
-                <span id="clock">12:00 PM</span>
-                <span id="date">Jan 1, 2023</span>
+                <div class="system-icon">
+                    <i class="fas fa-wifi"></i>
+                </div>
+                <div class="system-icon">
+                    <i class="fas fa-volume-up"></i>
+                </div>
+                <div class="system-icon" id="notificationsBtn">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <div id="clock">12:00 PM</div>
+                <div id="date">Jan 1, 2023</div>
             </div>
         </div>
 
         <!-- قائمة ابدأ -->
         <div id="startMenu" class="start-menu">
             <div class="start-menu-left">
-                <div class="app-list">
-                    <div class="app-item" data-app="fileExplorer">
-                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzAwNzgiIGQ9Ik0xMCA0SDRjLTEuMSAwLTEuOTkuOS0xLjk5IDJMMiAxOGMwIDEuMS44OSAyIDIgMmgxNmMxLjEgMCAyLS45IDItMlY4YzAtMS4xLS45LTItMi0yaC04bC0yLTJ6Ii8+PC9zdmc+" alt="File Explorer">
-                        <span>File Explorer</span>
+                <div class="pinned-apps">
+                    <div class="section-title">Pinned</div>
+                    <div class="app-grid">
+                        <div class="app-item" data-app="fileExplorer">
+                            <i class="fas fa-folder fa-2x" style="color: #0078d7;"></i>
+                            <span>File Explorer</span>
+                        </div>
+                        <div class="app-item" data-app="notepad">
+                            <i class="fas fa-file-alt fa-2x" style="color: #0078d7;"></i>
+                            <span>Notepad</span>
+                        </div>
+                        <div class="app-item" data-app="calculator">
+                            <i class="fas fa-calculator fa-2x" style="color: #0078d7;"></i>
+                            <span>Calculator</span>
+                        </div>
+                        <div class="app-item" data-app="browser">
+                            <i class="fas fa-globe fa-2x" style="color: #0078d7;"></i>
+                            <span>Web Browser</span>
+                        </div>
+                        <div class="app-item" data-app="mediaPlayer">
+                            <i class="fas fa-play-circle fa-2x" style="color: #0078d7;"></i>
+                            <span>Media Player</span>
+                        </div>
+                        <div class="app-item" data-app="settings">
+                            <i class="fas fa-cog fa-2x" style="color: #0078d7;"></i>
+                            <span>Settings</span>
+                        </div>
                     </div>
-                    <div class="app-item" data-app="notepad">
-                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzAwNzgiIGQ9Ik0xOSAzSDVjLTEuMSAwLTIgLjktMiAydjE0YzAgMS4xLjkgMiAyIDJoMTRjMS4xIDAgMi0uOSAyLTJWNWMwLTEuMS0uOS0yLTItMnptLTUgMTRIN1Y5aDd2OHoiLz48L3N2Zz4=" alt="Notepad">
-                        <span>Notepad</span>
-                    </div>
-                    <div class="app-item" data-app="calculator">
-                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzAwNzgiIGQ9Ik0xOSAzSDVjLTEuMSAwLTIgLjktMiAydjE0YzAgMS4xLjkgMiAyIDJoMTRjMS4xIDAgMi0uOSAyLTJWNWMwLTEuMS0uOS0yLTItMnptLTQgMmgydjJoLTJWNXptLTQgMGgydjJoLTJWNXptLTQgMGgydjJIN1Y1em0xMCA0SDV2MmgxNnYtMnptLTQgNGgydjJoLTJ2LTJ6bS00IDBoMnYySDd2LTJ6bS00IDBoMnYySDN2LTJ6bTggNGgydjJoLTJ2LTJ6bS00IDBoMnYySDd2LTJ6bS00IDBoMnYySDN2LTJ6Ii8+PC9zdmc+" alt="Calculator">
-                        <span>Calculator</span>
-                    </div>
-                    <div class="app-item" data-app="browser">
-                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzAwNzgiIGQ9Ik0xMiAyQzYuNDggMiAyIDYuNDggMiAxMnM0LjQ4IDEwIDEwIDEwIDEwLTQuNDggMTAtMTBTMTcuNTIgMiAxMiAyem0tMSAxN2MtMy4zMSAwLTYtMi42OS02LTZzMi42OS02IDYtNiA2IDIuNjkgNiA2LTIuNjkgNi02IDZ6Ii8+PHBhdGggZmlsbD0iIzAwNzgiIGQ9Ik0xMiA0Yy00LjQyIDAtOCAzLjU4LTggOHMzLjU4IDggOCA4IDgtMy41OCA4LTgtMy41OC04LTgtOHptMCAxM2MtMi43NiAwLTUtMi4yNC01LTVzMi4yNC01IDUtNSA1IDIuيNDUgNS01LTIuMjQtNS01LTV6Ii8+PC9zdmc+" alt="Browser">
-                        <span>Web Browser</span>
+                </div>
+                <div class="all-apps">
+                    <div class="section-title">All apps</div>
+                    <div class="app-grid">
+                        <div class="app-item" data-app="paint">
+                            <i class="fas fa-palette fa-2x" style="color: #0078d7;"></i>
+                            <span>Paint</span>
+                        </div>
+                        <div class="app-item" data-app="terminal">
+                            <i class="fas fa-terminal fa-2x" style="color: #0078d7;"></i>
+                            <span>Terminal</span>
+                        </div>
+                        <div class="app-item" data-app="calendar">
+                            <i class="fas fa-calendar-alt fa-2x" style="color: #0078d7;"></i>
+                            <span>Calendar</span>
+                        </div>
+                        <div class="app-item" data-app="camera">
+                            <i class="fas fa-camera fa-2x" style="color: #0078d7;"></i>
+                            <span>Camera</span>
+                        </div>
+                        <div class="app-item" data-app="mail">
+                            <i class="fas fa-envelope fa-2x" style="color: #0078d7;"></i>
+                            <span>Mail</span>
+                        </div>
+                        <div class="app-item" data-app="store">
+                            <i class="fas fa-shopping-bag fa-2x" style="color: #0078d7;"></i>
+                            <span>Store</span>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="start-menu-right">
+                <div class="user-info">
+                    <img src="https://i.pravatar.cc/150?img=12" alt="User">
+                    <div class="user-details">
+                        <h3>Ahmed Mohamed</h3>
+                        <p>Administrator</p>
+                    </div>
+                </div>
                 <div class="power-options">
-                    <button id="shutdownBtn">Shutdown</button>
-                    <button id="restartBtn">Restart</button>
+                    <button id="shutdownBtn"><i class="fas fa-power-off"></i> Shutdown</button>
+                    <button id="restartBtn"><i class="fas fa-redo"></i> Restart</button>
+                    <button id="sleepBtn"><i class="fas fa-moon"></i> Sleep</button>
                 </div>
             </div>
         </div>
@@ -71,31 +853,586 @@
         <!-- أيقونات سطح المكتب -->
         <div class="desktop-icons">
             <div class="desktop-icon" data-app="fileExplorer">
-                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTEwIDRINGMtMS4xIDAtMS45OS45LTEuOTkgMkwyIDE4YzAgMS4xLjg5IDIgMiAyaDE2YzEuMSAwIDItLjkgMi0yVjhjMC0xLjEtLjktMi0yLTJoLThsLTItMnoiLz48L3N2Zz4=" alt="File Explorer">
+                <i class="fas fa-folder fa-3x" style="color: white;"></i>
                 <span>File Explorer</span>
             </div>
             <div class="desktop-icon" data-app="notepad">
-                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTE5IDNINWMtMS4xIDAtMiAuOS0yIDJ2MTRjMCAxLjEuOSAyIDIgMmgxNGMxLjEgMCAyLS45IDItMlY1YzAtMS4xLS45LTItMi0yem0tNSA0SDdWOWg3djh6Ii8+PC9zdmc+" alt="Notepad">
+                <i class="fas fa-file-alt fa-3x" style="color: white;"></i>
                 <span>Notepad</span>
+            </div>
+            <div class="desktop-icon" data-app="browser">
+                <i class="fas fa-globe fa-3x" style="color: white;"></i>
+                <span>Web Browser</span>
+            </div>
+            <div class="desktop-icon" data-app="recycleBin">
+                <i class="fas fa-trash-alt fa-3x" style="color: white;"></i>
+                <span>Recycle Bin</span>
             </div>
         </div>
     </div>
 
-    <!-- قوالب التطبيقات -->
-    <template id="windowTemplate">
-        <div class="window">
-            <div class="window-header">
-                <div class="window-title"></div>
-                <div class="window-controls">
-                    <button class="minimize-btn">−</button>
-                    <button class="maximize-btn">□</button>
-                    <button class="close-btn">×</button>
-                </div>
-            </div>
-            <div class="window-content"></div>
-        </div>
-    </template>
+    <script>
+        // المتغيرات العامة
+        let windows = [];
+        let zIndexCounter = 1000;
+        let activeWindow = null;
+        let calculatorValue = '0';
+        let previousValue = '0';
+        let operation = null;
 
-    <script src="script.js"></script>
+        // تهيئة النظام
+        document.addEventListener('DOMContentLoaded', function() {
+            // تحديث الوقت والتاريخ
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+            
+            // إعداد أحداث المستخدم
+            setupEventListeners();
+        });
+
+        // تحديث الوقت والتاريخ
+        function updateDateTime() {
+            const now = new Date();
+            document.getElementById('clock').textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            document.getElementById('date').textContent = now.toLocaleDateString();
+        }
+
+        // إعداد المستمعين للأحداث
+        function setupEventListeners() {
+            // تسجيل الدخول
+            document.getElementById('loginBtn').addEventListener('click', function() {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('desktop').style.display = 'block';
+            });
+            
+            // السماح بتسجيل الدخول بالضغط على Enter
+            document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('loginScreen').style.display = 'none';
+                    document.getElementById('desktop').style.display = 'block';
+                }
+            });
+            
+            // قائمة ابدأ
+            document.getElementById('startMenuBtn').addEventListener('click', function() {
+                const startMenu = document.getElementById('startMenu');
+                startMenu.style.display = startMenu.style.display === 'grid' ? 'none' : 'grid';
+            });
+            
+            // إغلاق قائمة ابدأ عند النقر خارجها
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('#startMenu') && !e.target.closest('#startMenuBtn')) {
+                    document.getElementById('startMenu').style.display = 'none';
+                }
+            });
+            
+            // فتح التطبيقات من قائمة ابدأ
+            document.querySelectorAll('.app-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const appName = this.getAttribute('data-app');
+                    openApp(appName);
+                    document.getElementById('startMenu').style.display = 'none';
+                });
+            });
+            
+            // فتح التطبيقات من أيقونات سطح المكتب
+            document.querySelectorAll('.desktop-icon').forEach(icon => {
+                icon.addEventListener('dblclick', function() {
+                    const appName = this.getAttribute('data-app');
+                    openApp(appName);
+                });
+                
+                // تحديد أيقونة سطح المكتب
+                icon.addEventListener('click', function() {
+                    document.querySelectorAll('.desktop-icon').forEach(i => {
+                        i.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                });
+            });
+            
+            // إيقاف التشغيل وإعادة التشغيل والنوم
+            document.getElementById('shutdownBtn').addEventListener('click', function() {
+                if (confirm('Are you sure you want to shutdown?')) {
+                    document.getElementById('desktop').style.display = 'none';
+                    document.getElementById('loginScreen').style.display = 'flex';
+                }
+            });
+            
+            document.getElementById('restartBtn').addEventListener('click', function() {
+                if (confirm('Are you sure you want to restart?')) {
+                    location.reload();
+                }
+            });
+            
+            document.getElementById('sleepBtn').addEventListener('click', function() {
+                alert('System is going to sleep...');
+                document.getElementById('startMenu').style.display = 'none';
+            });
+        }
+
+        // فتح تطبيق جديد
+        function openApp(appName) {
+            const windowId = 'window_' + Date.now();
+            const windowElement = document.createElement('div');
+            windowElement.className = 'window';
+            windowElement.id = windowId;
+            windowElement.style.zIndex = zIndexCounter++;
+            windowElement.style.left = '100px';
+            windowElement.style.top = '100px';
+            
+            // إعداد محتوى التطبيق
+            let windowTitle = '';
+            let windowContent = '';
+            
+            switch(appName) {
+                case 'fileExplorer':
+                    windowTitle = 'File Explorer';
+                    windowContent = `
+                        <div class="file-explorer">
+                            <div class="sidebar">
+                                <h3>Quick Access</h3>
+                                <ul>
+                                    <li><i class="fas fa-desktop"></i> Desktop</li>
+                                    <li><i class="fas fa-download"></i> Downloads</li>
+                                    <li><i class="fas fa-file"></i> Documents</li>
+                                    <li><i class="fas fa-image"></i> Pictures</li>
+                                    <li><i class="fas fa-music"></i> Music</li>
+                                    <li><i class="fas fa-film"></i> Videos</li>
+                                </ul>
+                                <h3>This PC</h3>
+                                <ul>
+                                    <li><i class="fas fa-hdd"></i> Local Disk (C:)</li>
+                                    <li><i class="fas fa-hdd"></i> Local Disk (D:)</li>
+                                    <li><i class="fas fa-compact-disc"></i> DVD Drive (E:)</li>
+                                </ul>
+                            </div>
+                            <div class="content-area">
+                                <div class="toolbar">
+                                    <button><i class="fas fa-arrow-left"></i> Back</button>
+                                    <button><i class="fas fa-arrow-right"></i> Forward</button>
+                                    <button><i class="fas fa-arrow-up"></i> Up</button>
+                                    <button><i class="fas fa-sync-alt"></i> Refresh</button>
+                                </div>
+                                <div class="files-grid">
+                                    <div class="file-item">
+                                        <i class="fas fa-folder fa-3x" style="color: #0078d7;"></i>
+                                        <span>Documents</span>
+                                    </div>
+                                    <div class="file-item">
+                                        <i class="fas fa-folder fa-3x" style="color: #0078d7;"></i>
+                                        <span>Pictures</span>
+                                    </div>
+                                    <div class="file-item">
+                                        <i class="fas fa-folder fa-3x" style="color: #0078d7;"></i>
+                                        <span>Music</span>
+                                    </div>
+                                    <div class="file-item">
+                                        <i class="fas fa-folder fa-3x" style="color: #0078d7;"></i>
+                                        <span>Videos</span>
+                                    </div>
+                                    <div class="file-item">
+                                        <i class="fas fa-file-pdf fa-3x" style="color: #e74c3c;"></i>
+                                        <span>Document.pdf</span>
+                                    </div>
+                                    <div class="file-item">
+                                        <i class="fas fa-file-image fa-3x" style="color: #2ecc71;"></i>
+                                        <span>Photo.jpg</span>
+                                    </div>
+                                    <div class="file-item">
+                                        <i class="fas fa-file-video fa-3x" style="color: #9b59b6;"></i>
+                                        <span>Movie.mp4</span>
+                                    </div>
+                                    <div class="file-item">
+                                        <i class="fas fa-file-alt fa-3x" style="color: #f39c12;"></i>
+                                        <span>Notes.txt</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'notepad':
+                    windowTitle = 'Notepad';
+                    windowContent = `
+                        <textarea class="notepad-content" placeholder="Start typing...">Welcome to WebOS Notepad!
+You can use this application to write and edit text files.
+
+Features:
+- Simple text editing
+- Auto-save functionality
+- Basic formatting
+
+Try it out!</textarea>
+                    `;
+                    break;
+                    
+                case 'calculator':
+                    windowTitle = 'Calculator';
+                    windowContent = `
+                        <div class="calculator">
+                            <div class="calculator-display" id="calcDisplay">0</div>
+                            <button onclick="clearCalculator()">C</button>
+                            <button onclick="appendToCalculator('±')">±</button>
+                            <button onclick="appendToCalculator('%')">%</button>
+                            <button onclick="appendToCalculator('/')" class="operator">/</button>
+                            <button onclick="appendToCalculator('7')">7</button>
+                            <button onclick="appendToCalculator('8')">8</button>
+                            <button onclick="appendToCalculator('9')">9</button>
+                            <button onclick="appendToCalculator('*')" class="operator">×</button>
+                            <button onclick="appendToCalculator('4')">4</button>
+                            <button onclick="appendToCalculator('5')">5</button>
+                            <button onclick="appendToCalculator('6')">6</button>
+                            <button onclick="appendToCalculator('-')" class="operator">-</button>
+                            <button onclick="appendToCalculator('1')">1</button>
+                            <button onclick="appendToCalculator('2')">2</button>
+                            <button onclick="appendToCalculator('3')">3</button>
+                            <button onclick="appendToCalculator('+')" class="operator">+</button>
+                            <button onclick="appendToCalculator('0')" style="grid-column: span 2;">0</button>
+                            <button onclick="appendToCalculator('.')">.</button>
+                            <button onclick="calculateResult()" class="equals">=</button>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'browser':
+                    windowTitle = 'Web Browser';
+                    windowContent = `
+                        <div class="browser-toolbar">
+                            <button><i class="fas fa-arrow-left"></i></button>
+                            <button><i class="fas fa-arrow-right"></i></button>
+                            <button><i class="fas fa-redo"></i></button>
+                            <input type="text" placeholder="Search or enter website name" value="https://www.example.com">
+                            <button><i class="fas fa-search"></i></button>
+                        </div>
+                        <iframe class="browser-content" src="https://www.example.com"></iframe>
+                    `;
+                    break;
+                    
+                case 'mediaPlayer':
+                    windowTitle = 'Media Player';
+                    windowContent = `
+                        <div class="media-player">
+                            <video controls>
+                                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="media-controls">
+                                <button><i class="fas fa-play"></i> Play</button>
+                                <button><i class="fas fa-pause"></i> Pause</button>
+                                <button><i class="fas fa-stop"></i> Stop</button>
+                                <button><i class="fas fa-volume-up"></i> Volume</button>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'settings':
+                    windowTitle = 'Settings';
+                    windowContent = `
+                        <div class="settings-panel">
+                            <div class="settings-section">
+                                <h3>System</h3>
+                                <div class="setting-item">
+                                    <label for="themeSelect">Theme:</label>
+                                    <select id="themeSelect">
+                                        <option value="light">Light</option>
+                                        <option value="dark">Dark</option>
+                                        <option value="auto">Auto</option>
+                                    </select>
+                                </div>
+                                <div class="setting-item">
+                                    <label for="wallpaperSelect">Wallpaper:</label>
+                                    <select id="wallpaperSelect">
+                                        <option value="default">Default</option>
+                                        <option value="nature">Nature</option>
+                                        <option value="abstract">Abstract</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="settings-section">
+                                <h3>Display</h3>
+                                <div class="setting-item">
+                                    <label for="resolutionSelect">Resolution:</label>
+                                    <select id="resolutionSelect">
+                                        <option value="1080p">1920x1080</option>
+                                        <option value="720p">1280x720</option>
+                                        <option value="480p">854x480</option>
+                                    </select>
+                                </div>
+                                <div class="setting-item">
+                                    <label for="brightnessRange">Brightness:</label>
+                                    <input type="range" id="brightnessRange" min="0" max="100" value="80">
+                                </div>
+                            </div>
+                            <div class="settings-section">
+                                <h3>Sound</h3>
+                                <div class="setting-item">
+                                    <label for="volumeRange">Volume:</label>
+                                    <input type="range" id="volumeRange" min="0" max="100" value="70">
+                                </div>
+                                <div class="setting-item">
+                                    <label for="soundScheme">Sound Scheme:</label>
+                                    <select id="soundScheme">
+                                        <option value="default">Default</option>
+                                        <option value="classic">Classic</option>
+                                        <option value="nature">Nature Sounds</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                default:
+                    windowTitle = appName;
+                    windowContent = `<div style="padding: 20px; text-align: center;"><h2>${appName} Application</h2><p>This application is under development.</p></div>`;
+            }
+            
+            windowElement.innerHTML = `
+                <div class="window-header">
+                    <div class="window-title">
+                        <i class="fas fa-folder" style="color: white;"></i>
+                        <span>${windowTitle}</span>
+                    </div>
+                    <div class="window-controls">
+                        <button class="minimize-btn">−</button>
+                        <button class="maximize-btn">□</button>
+                        <button class="close-btn">×</button>
+                    </div>
+                </div>
+                <div class="window-content">
+                    ${windowContent}
+                </div>
+            `;
+            
+            // إضافة النافذة إلى الحاوية
+            document.getElementById('windowsContainer').appendChild(windowElement);
+            
+            // إضافة إلى قائمة النوافذ النشطة
+            windows.push({
+                id: windowId,
+                element: windowElement,
+                app: appName,
+                title: windowTitle
+            });
+            
+            // جعل النافذة نشطة
+            makeWindowActive(windowId);
+            
+            // إضافة إلى شريط المهام
+            addToTaskbar(windowId, windowTitle, appName);
+            
+            // إعداد التحكم بالنافذة
+            setupWindowControls(windowElement, windowId);
+        }
+
+        // إعداد عناصر التحكم بالنافذة
+        function setupWindowControls(windowElement, windowId) {
+            const header = windowElement.querySelector('.window-header');
+            const minimizeBtn = windowElement.querySelector('.minimize-btn');
+            const maximizeBtn = windowElement.querySelector('.maximize-btn');
+            const closeBtn = windowElement.querySelector('.close-btn');
+            
+            // جعل النافذة نشطة عند النقر عليها
+            windowElement.addEventListener('mousedown', function() {
+                makeWindowActive(windowId);
+            });
+            
+            // تصغير النافذة
+            minimizeBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                windowElement.style.display = 'none';
+                // تحديث شريط المهام
+                const taskbarApp = document.querySelector(`.taskbar-app[data-window="${windowId}"]`);
+                if (taskbarApp) {
+                    taskbarApp.classList.remove('active');
+                }
+            });
+            
+            // تكبير/تصغير النافذة
+            maximizeBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (windowElement.classList.contains('maximized')) {
+                    windowElement.classList.remove('maximized');
+                    windowElement.style.width = '';
+                    windowElement.style.height = '';
+                    windowElement.style.top = '';
+                    windowElement.style.left = '';
+                } else {
+                    windowElement.classList.add('maximized');
+                    windowElement.style.width = '100%';
+                    windowElement.style.height = 'calc(100% - var(--taskbar-height))';
+                    windowElement.style.top = '0';
+                    windowElement.style.left = '0';
+                }
+            });
+            
+            // إغلاق النافذة
+            closeBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeWindow(windowId);
+            });
+            
+            // سحب النافذة
+            let isDragging = false;
+            let dragOffset = { x: 0, y: 0 };
+            
+            header.addEventListener('mousedown', function(e) {
+                if (windowElement.classList.contains('maximized')) return;
+                
+                isDragging = true;
+                dragOffset.x = e.clientX - windowElement.offsetLeft;
+                dragOffset.y = e.clientY - windowElement.offsetTop;
+                
+                makeWindowActive(windowId);
+            });
+            
+            document.addEventListener('mousemove', function(e) {
+                if (isDragging) {
+                    windowElement.style.left = (e.clientX - dragOffset.x) + 'px';
+                    windowElement.style.top = (e.clientY - dragOffset.y) + 'px';
+                }
+            });
+            
+            document.addEventListener('mouseup', function() {
+                isDragging = false;
+            });
+        }
+
+        // جعل النافذة نشطة
+        function makeWindowActive(windowId) {
+            const window = windows.find(w => w.id === windowId);
+            if (window) {
+                // إعادة تعيين z-index لجميع النوافذ
+                windows.forEach(w => {
+                    w.element.style.zIndex = 1000;
+                });
+                
+                // جعل النافذة المحددة في المقدمة
+                window.element.style.zIndex = zIndexCounter++;
+                activeWindow = window;
+                
+                // تحديث شريط المهام
+                document.querySelectorAll('.taskbar-app').forEach(app => {
+                    app.classList.remove('active');
+                });
+                
+                const taskbarApp = document.querySelector(`.taskbar-app[data-window="${windowId}"]`);
+                if (taskbarApp) {
+                    taskbarApp.classList.add('active');
+                }
+            }
+        }
+
+        // إضافة إلى شريط المهام
+        function addToTaskbar(windowId, title, appName) {
+            const taskbarApps = document.getElementById('taskbarApps');
+            const taskbarApp = document.createElement('div');
+            taskbarApp.className = 'taskbar-app active';
+            taskbarApp.innerHTML = `<i class="fas fa-${getAppIcon(appName)}"></i> ${title}`;
+            taskbarApp.setAttribute('data-window', windowId);
+            
+            taskbarApp.addEventListener('click', function() {
+                const targetWindow = document.getElementById(windowId);
+                if (targetWindow.style.display === 'none') {
+                    targetWindow.style.display = 'flex';
+                    makeWindowActive(windowId);
+                } else {
+                    if (activeWindow && activeWindow.id === windowId) {
+                        targetWindow.style.display = 'none';
+                        this.classList.remove('active');
+                    } else {
+                        makeWindowActive(windowId);
+                    }
+                }
+            });
+            
+            taskbarApps.appendChild(taskbarApp);
+        }
+
+        // الحصول على أيقونة التطبيق
+        function getAppIcon(appName) {
+            const icons = {
+                'fileExplorer': 'folder',
+                'notepad': 'file-alt',
+                'calculator': 'calculator',
+                'browser': 'globe',
+                'mediaPlayer': 'play-circle',
+                'settings': 'cog',
+                'paint': 'palette',
+                'terminal': 'terminal',
+                'calendar': 'calendar-alt',
+                'camera': 'camera',
+                'mail': 'envelope',
+                'store': 'shopping-bag',
+                'recycleBin': 'trash-alt'
+            };
+            
+            return icons[appName] || 'window-maximize';
+        }
+
+        // إغلاق النافذة
+        function closeWindow(windowId) {
+            const windowIndex = windows.findIndex(w => w.id === windowId);
+            if (windowIndex !== -1) {
+                // إزالة النافذة من DOM
+                const windowElement = document.getElementById(windowId);
+                if (windowElement) {
+                    windowElement.remove();
+                }
+                
+                // إزالة من شريط المهام
+                const taskbarApp = document.querySelector(`.taskbar-app[data-window="${windowId}"]`);
+                if (taskbarApp) {
+                    taskbarApp.remove();
+                }
+                
+                // إزالة من المصفوفة
+                windows.splice(windowIndex, 1);
+                
+                // إذا كانت النافذة النشطة هي التي أغلقت، اجعل النافذة التالية نشطة
+                if (activeWindow && activeWindow.id === windowId) {
+                    activeWindow = windows.length > 0 ? windows[windows.length - 1] : null;
+                }
+            }
+        }
+
+        // وظائف الآلة الحاسبة
+        function appendToCalculator(value) {
+            if (calculatorValue === '0' || calculatorValue === 'Error') {
+                calculatorValue = value;
+            } else {
+                calculatorValue += value;
+            }
+            updateCalculatorDisplay();
+        }
+
+        function clearCalculator() {
+            calculatorValue = '0';
+            previousValue = '0';
+            operation = null;
+            updateCalculatorDisplay();
+        }
+
+        function calculateResult() {
+            try {
+                // استبدال الرموز لجعلها صالحة للتقييم
+                let expression = calculatorValue.replace(/×/g, '*').replace(/÷/g, '/');
+                calculatorValue = eval(expression).toString();
+            } catch (e) {
+                calculatorValue = 'Error';
+            }
+            updateCalculatorDisplay();
+        }
+
+        function updateCalculatorDisplay() {
+            const display = document.getElementById('calcDisplay');
+            if (display) {
+                display.textContent = calculatorValue;
+            }
+        }
+    </script>
 </body>
 </html>

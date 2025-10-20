@@ -1,0 +1,311 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    overflow: hidden;
+    background: linear-gradient(135deg, #0078d7 0%, #106ebe 100%);
+    height: 100vh;
+}
+
+/* شاشة تسجيل الدخول */
+.login-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0078d7 0%, #106ebe 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.login-container {
+    text-align: center;
+    color: white;
+}
+
+.user-profile img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    border: 2px solid white;
+}
+
+.password-input input {
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 4px;
+    width: 200px;
+}
+
+.password-input button {
+    padding: 10px 20px;
+    background: #0078d7;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* سطح المكتب */
+.desktop {
+    display: none;
+    width: 100%;
+    height: 100vh;
+    background: url('https://via.placeholder.com/1920x1080') center/cover no-repeat;
+    position: relative;
+}
+
+/* شريط المهام */
+.taskbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    z-index: 999;
+}
+
+.start-menu-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.start-menu-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+.taskbar-apps {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.system-tray {
+    display: flex;
+    align-items: center;
+    color: white;
+    font-size: 12px;
+    gap: 10px;
+}
+
+/* قائمة ابدأ */
+.start-menu {
+    position: fixed;
+    bottom: 40px;
+    left: 0;
+    width: 500px;
+    height: 500px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 10px 10px 0 0;
+    display: none;
+    grid-template-columns: 1fr 200px;
+    z-index: 998;
+}
+
+.start-menu-left {
+    padding: 20px;
+}
+
+.app-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.app-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.app-item:hover {
+    background: rgba(0, 120, 215, 0.1);
+}
+
+.app-item img {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+}
+
+.start-menu-right {
+    background: rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.power-options button {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    background: #0078d7;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* أيقونات سطح المكتب */
+.desktop-icons {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.desktop-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 70px;
+    cursor: pointer;
+    text-align: center;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.desktop-icon img {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 5px;
+}
+
+/* النوافذ */
+.windows-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 40px);
+    pointer-events: none;
+}
+
+.window {
+    position: absolute;
+    min-width: 400px;
+    min-height: 300px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    pointer-events: all;
+    overflow: hidden;
+}
+
+.window-header {
+    height: 32px;
+    background: #0078d7;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    cursor: move;
+    user-select: none;
+}
+
+.window-controls button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.window-controls button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.window-content {
+    height: calc(100% - 32px);
+    padding: 20px;
+    overflow: auto;
+}
+
+/* محاكاة التطبيقات */
+.file-explorer {
+    display: flex;
+    height: 100%;
+}
+
+.sidebar {
+    width: 200px;
+    background: #f3f3f3;
+    padding: 10px;
+    border-right: 1px solid #ddd;
+}
+
+.content-area {
+    flex: 1;
+    padding: 10px;
+}
+
+.notepad-content {
+    width: 100%;
+    height: 100%;
+    border: none;
+    resize: none;
+    font-family: 'Consolas', monospace;
+    font-size: 14px;
+}
+
+.calculator {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+    max-width: 300px;
+}
+
+.calculator-display {
+    grid-column: 1 / -1;
+    height: 40px;
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    text-align: right;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.calculator button {
+    height: 40px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+}
+
+.calculator button:hover {
+    background: #f0f0f0;
+}
+
+.browser-content {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
